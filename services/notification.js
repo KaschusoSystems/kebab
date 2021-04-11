@@ -3,6 +3,7 @@ const cron = require('node-cron');
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
 var Grade = mongoose.model('Grade');
+var SingleGrade = mongoose.model('SingleGrade');
 
 const kaschusoApi = require('./kaschuso-api');
 const webhook = require('./webhook');
@@ -26,7 +27,7 @@ async function processGradeNotifications() {
                 await gmail.sendGradeNotification(user, changedGrades);
                 
                 // Only update db if changes detected
-                await updateGrades(savedGrades, currentGrades, user.id);
+                await updateGrades(savedGrades, changedGrades, user.id);
                 
                 if (user.webhookUri) {
                     webhook.triggerWebhook(user.webhookUri, changedGrades);
@@ -38,20 +39,38 @@ async function processGradeNotifications() {
     }
 }
 
-async function updateGrades(savedGrades, currentGrades, userId) {
-    await Promise.all(currentGrades.map(async (currentGrade) => {
-        const existingGrade = findByGrade(savedGrades, currentGrade);
+async function updateGrades(savedGrades, changedGrades, userId) {
+    await Promise.all(changedGrades.map(async (changedGrade) => {
+        const existingGrade = findByGrade(savedGrades, changedGrade);
         if (existingGrade) {
-            Object.assign(existingGrade, currentGrade);
-            existingGrade.save();
+            mergeGradeObjects(existingGrade, changedGrade);
+            await existingGrade.save();
         } else {
-            const currentGradeModel = createGradeModelFromGrade(currentGrade, userId);
+            const currentGradeModel = createGradeModel(changedGrade, userId);
             await currentGradeModel.save();
         }
     }));
 }
 
-function createGradeModelFromGrade(grade, userId) {
+function mergeGradeObjects(existingGrade, changedGrade) {
+    existingGrade.average = changedGrade.average;
+    changedGrade.grades.forEach(x => {
+        const existingSingleGrade = findBySingleGrade(existingGrade.grades, x);
+        if (existingSingleGrade) {
+            Object.assign(existingSingleGrade, x);
+        } else {
+            appendSingleGradeToGrade(existingGrade, x);
+        }
+    });
+}
+
+function appendSingleGradeToGrade(grade, singleGrade) {
+    const singleGradeModel = new SingleGrade();
+    Object.assign(singleGradeModel, singleGrade);
+    grade.grades.unshift(singleGrade);
+}
+
+function createGradeModel(grade, userId) {
     const gradeModel = new Grade();
     Object.assign(gradeModel, grade);
     gradeModel.user = userId;
@@ -74,6 +93,10 @@ async function getChangedGrades(savedGrades, currentGrades) {
         }
     }));
     return changedGrades;
+}
+
+function findBySingleGrade(array, singleGrade) {
+    return array.find(x => x.title === singleGrade.title && x.date === singleGrade.date);
 }
 
 function findByGrade(array, grade) {
