@@ -27,6 +27,9 @@ passport.use(new LocalStrategy({
 
       const userInfo = await kaschusoApi.getUserInfo(user);
       user.email = userInfo.privateEmail;
+      user.gradeNotifications = true;
+      user.absenceReminders = true;
+      user.monthlySummary = true;
 
       await user.save();
     }
