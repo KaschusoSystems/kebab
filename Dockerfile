@@ -3,8 +3,6 @@ ENV NODE_ENV=production
 
 WORKDIR /app/kebab
 
-RUN ls
-
 COPY ["package.json", "yarn.lock", "./"]
 
 RUN yarn install
