@@ -9,7 +9,8 @@ const http = require('http'),
   cors = require('cors'),
   passport = require('passport'),
   errorhandler = require('errorhandler'),
-  mongoose = require('mongoose');
+  mongoose = require('mongoose'),
+  config = require('./config');
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -22,7 +23,8 @@ app.use(require('morgan')('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(require('method-override')());
-app.use(session({ secret: 'kebab', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false }));
+// use secret from env
+app.use(session({ secret: config.secret, cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false }));
 
 if (!isProduction) {
   app.use(errorhandler());
