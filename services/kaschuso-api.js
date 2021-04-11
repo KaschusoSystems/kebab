@@ -37,9 +37,16 @@ async function scrapeAbsences(user) {
     return res.data.absences;
 }
 
+async function getMandators() {
+    const uri = `${KASCHUSO_API_BASE_URI}/mandators`;
+    const res = await axios.get(uri);
+    return res.data.mandators;
+}
+
 module.exports = {
     login,
     scrapeGrades,
     scrapeAbsences,
-    getUserInfo
+    getUserInfo,
+    getMandators
 };
