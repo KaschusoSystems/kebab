@@ -3,7 +3,7 @@ const nodemailer = require("nodemailer");
 const gmailTransporter = createTransporter();
 const MAIL_SENDER = `"Kaschuso Notifications 📢" <${process.env.GMAIL_USERNAME}>`;
 const MAIL_SUBJECT = 'You have new grades in your Kaschuso ❗';
-const KASCHUSO_BASE_URL = 'https://kaschuso.so.ch/';
+const KASCHUSO_BASE_URL = process.env.KASCHUSO_BASE_URL || 'https://kaschuso.so.ch/';
 
 function createTransporter() {
     return nodemailer.createTransport({

@@ -10,7 +10,7 @@ const http = require('http'),
   passport = require('passport'),
   errorhandler = require('errorhandler'),
   mongoose = require('mongoose'),
-  config = require('./config');
+  secret = require('./config').secret;
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -23,15 +23,14 @@ app.use(require('morgan')('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(require('method-override')());
-// use secret from env
-app.use(session({ secret: config.secret, cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false }));
+app.use(session({ secret: secret, cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false }));
 
 if (!isProduction) {
   app.use(errorhandler());
 }
 
 // Database connection
-mongoose.connect(process.env.MONGODB_URI);
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017');
 if (!isProduction) {
   mongoose.set('debug', true);
 }

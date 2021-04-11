@@ -1,5 +1,5 @@
 const axios = require('axios');
-const KASCHUSO_API_BASE_URI = process.env.KASCHUSO_API_URI ? process.env.KASCHUSO_API_URI : 'hhttp://localhost:3001/api';
+const KASCHUSO_API_BASE_URI = process.env.KASCHUSO_API_URI || 'http://localhost:3001/api';
 
 function createUrlParameter(username, password, mandator) {
     return `mandator=${encodeURIComponent(mandator)}&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
@@ -7,16 +7,11 @@ function createUrlParameter(username, password, mandator) {
 
 async function login(username, password, mandator) {
     const uri = `${KASCHUSO_API_BASE_URI}/authenticate?${createUrlParameter(username, password, mandator)}`;
-    try {
-        const res = await axios.get(uri);
-        if (res.status === 200) {
-            return true;
-        } else {
-            return false;
-        }
-    } catch (error) {
-        return false;
-    }
+    return axios.get(uri).then(res => {
+            return res.status === 200;
+        }).catch(error => {
+            return false
+        });
 }
 
 async function getUserInfo(user) {
