@@ -23,7 +23,7 @@ async function getUserInfo(user) {
 async function scrapeGrades(user) {
     const uri = `${KASCHUSO_API_BASE_URI}/grades?${createUrlParameter(user.username, user.password, user.mandator)}`;
     const res = await axios.get(uri);
-    return res.data.grades;
+    return res.data.subjects;
 }
 
 async function scrapeAbsences(user) {
