@@ -2,8 +2,8 @@ const cron = require('node-cron');
 
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
+var Subject = mongoose.model('Subject');
 var Grade = mongoose.model('Grade');
-var SingleGrade = mongoose.model('SingleGrade');
 
 const kaschusoApi = require('./kaschuso-api');
 const webhook = require('./webhook');
@@ -16,97 +16,98 @@ async function processGradeNotifications() {
         console.log(`${users.length} users found for grade notifications`);
 
         await Promise.all(users.map(async (user) => {
-            const currentGrades = await kaschusoApi.scrapeGrades(user);
-            const savedGrades = await Grade.find({'user': user.id});
+            const currentSubjects = await kaschusoApi.scrapeGrades(user);
+            const savedSubjects = await Subject.find({'user': user.id});
             
-            const changedGrades = await getChangedGrades(Object.assign(savedGrades, {}), currentGrades);
-            const hasChanges = changedGrades.length !== 0;
+            const changedSubjects = await getChangedSubjects(Object.assign(savedSubjects, {}), currentSubjects);
+            const hasChanges = changedSubjects.length !== 0;
 
             if (hasChanges) {
-                console.log(`${changedGrades.length} new/changed grades for user ${user.username}`);
-                await gmail.sendGradeNotification(user, changedGrades);
+                console.log(`new/changed grades in ${changedSubjects.length} subject(s) for user ${user.username}`);
+                await gmail.sendGradeNotification(user, changedSubjects);
                 
                 // Only update db if changes detected
-                await updateGrades(savedGrades, changedGrades, user.id);
+                await updateSubjects(savedSubjects, changedSubjects, user.id);
                 
                 if (user.webhookUri) {
-                    webhook.triggerWebhook(user.webhookUri, changedGrades);
+                    webhook.triggerWebhook(user.webhookUri, changedSubjects);
                 }
             }
         }));
     } catch (error) {
         console.log('Error during notifications processing: ' + error);
+        throw error;
     }
 }
 
-async function updateGrades(savedGrades, changedGrades, userId) {
-    await Promise.all(changedGrades.map(async (changedGrade) => {
-        const existingGrade = findByGrade(savedGrades, changedGrade);
-        if (existingGrade) {
-            mergeGradeObjects(existingGrade, changedGrade);
-            await existingGrade.save();
+async function updateSubjects(savedSubjects, changedSubjects, userId) {
+    await Promise.all(changedSubjects.map(async (changedSubject) => {
+        const existingSubject = findBySubject(savedSubjects, changedSubject);
+        if (existingSubject) {
+            mergeSubjectObjects(existingSubject, changedSubject);
+            await existingSubject.save();
         } else {
-            const currentGradeModel = createGradeModel(changedGrade, userId);
-            await currentGradeModel.save();
+            const currentSubjectModel = createSubjectModel(changedSubject, userId);
+            await currentSubjectModel.save();
         }
     }));
 }
 
-function mergeGradeObjects(existingGrade, changedGrade) {
-    existingGrade.average = changedGrade.average;
-    changedGrade.grades.forEach(x => {
-        const existingSingleGrade = findBySingleGrade(existingGrade.grades, x);
-        if (existingSingleGrade) {
-            Object.assign(existingSingleGrade, x);
+function mergeSubjectObjects(existingSubject, changedSubject) {
+    existingSubject.average = changedSubject.average;
+    changedSubject.grades.forEach(x => {
+        const existingGrade = findByGrade(existingSubject.grades, x);
+        if (existingGrade) {
+            Object.assign(existingGrade, x);
         } else {
-            appendSingleGradeToGrade(existingGrade, x);
+            appendGradeToSubject(existingSubject, x);
         }
     });
 }
-
-function appendSingleGradeToGrade(grade, singleGrade) {
-    const singleGradeModel = new SingleGrade();
-    Object.assign(singleGradeModel, singleGrade);
-    grade.grades.unshift(singleGrade);
-}
-
-function createGradeModel(grade, userId) {
+// add to mongoose model
+function appendGradeToSubject(subject, grade) {
     const gradeModel = new Grade();
     Object.assign(gradeModel, grade);
-    gradeModel.user = userId;
-    return gradeModel;
+    subject.grades.unshift(grade);
 }
 
-async function getChangedGrades(savedGrades, currentGrades) {
-    const changedGrades = [];
-    await Promise.all(currentGrades.map(async (currentGrade) => {
-        const matchingSavedGrade = findByGrade(savedGrades, currentGrade);
-        if (matchingSavedGrade) {
-            const changedSingleGrades = getChangedSingleGrades(matchingSavedGrade.grades, currentGrade.grades);
-            if (changedSingleGrades && changedSingleGrades.length > 0) {
-                const changedGrade = Object.assign(currentGrade, {});
-                changedGrade.grades = changedSingleGrades;
-                changedGrades.push(changedGrade);
+function createSubjectModel(subject, userId) {
+    const subjectModel = new Subject();
+    Object.assign(subjectModel, subject);
+    subjectModel.user = userId;
+    return subjectModel;
+}
+
+async function getChangedSubjects(savedSubjects, currentSubjects) {
+    const changedSubjects = [];
+    await Promise.all(currentSubjects.map(async (currentSubject) => {
+        const matchingSavedSubject = findByGrade(savedSubjects, currentSubject);
+        if (matchingSavedSubject) {
+            const changedGrades = getChangedGrades(matchingSavedSubject.grades, currentSubject.grades);
+            if (changedGrades && changedGrades.length > 0) {
+                const changedSubject = Object.assign(currentSubject, {});
+                changedSubject.grades = changedGrades;
+                changedSubjects.push(changedSubject);
             }
         } else {
-            changedGrades.push(currentGrade);
+            changedSubjects.push(currentSubject);
         }
     }));
-    return changedGrades;
-}
-
-function findBySingleGrade(array, singleGrade) {
-    return array.find(x => x.title === singleGrade.title && x.date === singleGrade.date);
+    return changedSubjects;
 }
 
 function findByGrade(array, grade) {
-    return array.find(x => x.class === grade.class && x.name === grade.name);
+    return array.find(x => x.title === grade.title && x.date === grade.date);
 }
 
-function getChangedSingleGrades(savedSingleGrades, currentSingleGrades) {
-    return currentSingleGrades.filter(x => savedSingleGrades
+function findBySubject(array, subject) {
+    return array.find(x => x.class === subject.class && x.name === subject.name);
+}
+
+function getChangedGrades(savedGrades, currentGrades) {
+    return currentGrades.filter(x => savedGrades
         .find(y => y.title !== x.title && y.value !== x.value && y.points !== x.points));
 }
-
+processGradeNotifications()
 // Every minute
 cron.schedule('* * * * *', processGradeNotifications);
