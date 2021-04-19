@@ -1,5 +1,3 @@
-const cron = require('node-cron');
-
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
 
@@ -21,8 +19,6 @@ async function processAbsenceReminders() {
     }
 }
 
-if (process.env.NODE_ENV !== 'test') {
-    processAbsenceReminders()
-    // Every day at midnight
-    cron.schedule('0 0 * * *', processAbsenceReminders);
+module.exports = {
+    processAbsenceReminders
 }

@@ -1,5 +1,3 @@
-const cron = require('node-cron');
-
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
 var Subject = mongoose.model('Subject');
@@ -99,14 +97,8 @@ function getChangedGrades(grades, newGrades) {
         .find(y => x.title === y.title && x.value == y.value)); // '5.5' shall be equal to 5.5 (string == number)
 }
 
-if (process.env.NODE_ENV !== 'test') {
-    processGradeNotifications()
-    // move to scheduler
-    // Every minute
-    cron.schedule('* * * * *', processGradeNotifications);
-}
-
 module.exports = {
+    processGradeNotifications,
     getChangedGrades,
     getChangedSubjects,
     updateSubjects,

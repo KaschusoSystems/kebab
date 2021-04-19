@@ -43,6 +43,8 @@ require('./services/notification');
 
 require('./services/reminder');
 
+require('./services/scheduler');
+
 app.use(require('./routes'));
 
 /// catch 404 and forward to error handler
