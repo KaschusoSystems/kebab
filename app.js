@@ -36,7 +36,6 @@ if (!isProduction) {
 }
 
 require('./models/User');
-require('./models/Grade');
 
 require('./config/passport');
 require('./services/gmail');

@@ -1,4 +1,7 @@
+require('./Subject');
+
 var mongoose = require('mongoose');
+var Subject = mongoose.model('Subject');
 var uniqueValidator = require('mongoose-unique-validator');
 var jwt = require('jsonwebtoken');
 var secret = require('../config').secret;
@@ -15,6 +18,12 @@ var UserSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 UserSchema.plugin(uniqueValidator, { message: 'is already taken.' });
+
+UserSchema.methods.addSubject = async function (subject) {
+    const subjectModel = new Subject(subject);
+    subjectModel.user = this;
+    return await subjectModel.save();
+}
 
 UserSchema.methods.generateJWT = function () {
   var today = new Date();

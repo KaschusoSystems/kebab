@@ -21,5 +21,8 @@ async function processAbsenceReminders() {
     }
 }
 
-// Every day at midnight
-cron.schedule('0 0 * * *', processAbsenceReminders);
+if (process.env.NODE_ENV !== 'test') {
+    processAbsenceReminders()
+    // Every day at midnight
+    cron.schedule('0 0 * * *', processAbsenceReminders);
+}
