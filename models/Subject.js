@@ -1,3 +1,5 @@
+require('./Grade');
+
 var mongoose = require('mongoose');
 var Grade = mongoose.model('Grade');
 
@@ -9,13 +11,17 @@ var SubjectSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 }, { timestamps: true });
 
-SubjectSchema.methods.toJSONFor = function (user) {
+SubjectSchema.methods.addGrade = async function (grade) {
+    this.grades.unshift(grade);
+    return await this.save();
+}
+
+SubjectSchema.methods.toJSONFor = function () {
   return {
     class: this.class,
     name: this.name,
     average: this.average,
     grades: this.grades.map(x => x.toJSONFor()),
-    // user: this.user.toProfileJSONFor(user)
   };
 };
 

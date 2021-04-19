@@ -3,7 +3,6 @@ const cron = require('node-cron');
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
 var Subject = mongoose.model('Subject');
-var Grade = mongoose.model('Grade');
 
 const kaschusoApi = require('./kaschuso-api');
 const webhook = require('./webhook');
@@ -16,10 +15,10 @@ async function processGradeNotifications() {
         console.log(`${users.length} users found for grade notifications`);
 
         await Promise.all(users.map(async (user) => {
-            const currentSubjects = await kaschusoApi.scrapeGrades(user);
+            const newSubjects = await kaschusoApi.scrapeGrades(user);
             const savedSubjects = await Subject.find({'user': user.id});
             
-            const changedSubjects = await getChangedSubjects(Object.assign(savedSubjects, {}), currentSubjects);
+            const changedSubjects = await getChangedSubjects(Object.assign(savedSubjects, {}), newSubjects);
             const hasChanges = changedSubjects.length !== 0;
 
             if (hasChanges) {
@@ -27,11 +26,13 @@ async function processGradeNotifications() {
                 await gmail.sendGradeNotification(user, changedSubjects);
                 
                 // Only update db if changes detected
-                await updateSubjects(savedSubjects, changedSubjects, user.id);
+                await updateSubjects(savedSubjects, changedSubjects, user);
                 
                 if (user.webhookUri) {
                     webhook.triggerWebhook(user.webhookUri, changedSubjects);
                 }
+            } else {
+                console.log(`no new/changed grades for user ${user.username}`);
             }
         }));
     } catch (error) {
@@ -40,74 +41,76 @@ async function processGradeNotifications() {
     }
 }
 
-async function updateSubjects(savedSubjects, changedSubjects, userId) {
-    await Promise.all(changedSubjects.map(async (changedSubject) => {
-        const existingSubject = findBySubject(savedSubjects, changedSubject);
-        if (existingSubject) {
-            mergeSubjectObjects(existingSubject, changedSubject);
-            await existingSubject.save();
+async function updateSubjects(subjects, changedSubjects, user) {
+    await Promise.all(changedSubjects.map(async changedSubject => {
+        const subject = findBySubject(subjects, changedSubject);
+        if (subject) {
+            await mergeSubjectObject(subject, changedSubject);
         } else {
-            const currentSubjectModel = createSubjectModel(changedSubject, userId);
-            await currentSubjectModel.save();
+            const newSubject = await user.addSubject(changedSubject);
+            subjects.push(newSubject);
         }
     }));
+    return subjects;
 }
 
-function mergeSubjectObjects(existingSubject, changedSubject) {
-    existingSubject.average = changedSubject.average;
-    changedSubject.grades.forEach(x => {
-        const existingGrade = findByGrade(existingSubject.grades, x);
+async function mergeSubjectObject(subject, changedSubject) {
+    subject.average = changedSubject.average;
+    await Promise.all(changedSubject.grades.map(async x => {
+        const existingGrade = findByGrade(subject.grades, x);
         if (existingGrade) {
             Object.assign(existingGrade, x);
+            await subject.save();
         } else {
-            appendGradeToSubject(existingSubject, x);
+            await subject.addGrade(x);
         }
-    });
-}
-// add to mongoose model
-function appendGradeToSubject(subject, grade) {
-    const gradeModel = new Grade();
-    Object.assign(gradeModel, grade);
-    subject.grades.unshift(grade);
+    }));
+    return subject;
 }
 
-function createSubjectModel(subject, userId) {
-    const subjectModel = new Subject();
-    Object.assign(subjectModel, subject);
-    subjectModel.user = userId;
-    return subjectModel;
-}
-
-async function getChangedSubjects(savedSubjects, currentSubjects) {
+function getChangedSubjects(subjects, newSubjects) {
     const changedSubjects = [];
-    await Promise.all(currentSubjects.map(async (currentSubject) => {
-        const matchingSavedSubject = findByGrade(savedSubjects, currentSubject);
-        if (matchingSavedSubject) {
-            const changedGrades = getChangedGrades(matchingSavedSubject.grades, currentSubject.grades);
+    newSubjects.map(newSubject => {
+        const subject = findBySubject(subjects, newSubject);
+        if (subject) {
+            const changedGrades = getChangedGrades(subject.grades, newSubject.grades);
             if (changedGrades && changedGrades.length > 0) {
-                const changedSubject = Object.assign(currentSubject, {});
+                const changedSubject = Object.assign(newSubject, {});
                 changedSubject.grades = changedGrades;
                 changedSubjects.push(changedSubject);
             }
         } else {
-            changedSubjects.push(currentSubject);
+            changedSubjects.push(newSubject);
         }
-    }));
+    });
     return changedSubjects;
 }
 
-function findByGrade(array, grade) {
-    return array.find(x => x.title === grade.title && x.date === grade.date);
+function findByGrade(grades, grade) {
+    return grades.find(x => x.title === grade.title && x.date === grade.date);
 }
 
-function findBySubject(array, subject) {
-    return array.find(x => x.class === subject.class && x.name === subject.name);
+function findBySubject(subjects, subject) {
+    return subjects.find(x => x.class === subject.class && x.name === subject.name);
 }
 
-function getChangedGrades(savedGrades, currentGrades) {
-    return currentGrades.filter(x => savedGrades
-        .find(y => y.title !== x.title && y.value !== x.value && y.points !== x.points));
+function getChangedGrades(grades, newGrades) {
+    return newGrades.filter(x => !grades
+        .find(y => x.title === y.title && x.value == y.value)); // '5.5' shall be equal to 5.5 (string == number)
 }
-processGradeNotifications()
-// Every minute
-cron.schedule('* * * * *', processGradeNotifications);
+
+if (process.env.NODE_ENV !== 'test') {
+    processGradeNotifications()
+    // move to scheduler
+    // Every minute
+    cron.schedule('* * * * *', processGradeNotifications);
+}
+
+module.exports = {
+    getChangedGrades,
+    getChangedSubjects,
+    updateSubjects,
+    mergeSubjectObject,
+    findByGrade,
+    findBySubject
+}

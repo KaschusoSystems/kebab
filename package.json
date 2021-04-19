@@ -7,7 +7,7 @@
     "mongo:start": "docker run --name mongo -p 3000:3000 mongo & sleep 5",
     "start": "node ./app.js",
     "dev": "nodemon ./app.js",
-    "test": "newman run ./tests/api-tests.postman.json -e ./tests/env-api-tests.postman.json",
+    "test": "jest",
     "stop": "lsof -ti :3000 | xargs kill",
     "mongo:stop": "docker stop mongo && docker rm mongo"
   },
