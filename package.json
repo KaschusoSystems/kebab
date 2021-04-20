@@ -23,6 +23,7 @@
     "dotenv": "^8.2.0",
     "ejs": "2.4.1",
     "errorhandler": "1.4.3",
+    "eta": "^1.12.1",
     "express": "4.13.4",
     "express-jwt": "3.3.0",
     "express-session": "1.13.0",

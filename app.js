@@ -10,7 +10,8 @@ const http = require('http'),
   passport = require('passport'),
   errorhandler = require('errorhandler'),
   mongoose = require('mongoose'),
-  secret = require('./config').secret;
+  secret = require('./config').secret,
+  eta = require("eta");
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -28,6 +29,14 @@ app.use(session({ secret: secret, cookie: { maxAge: 60000 }, resave: false, save
 if (!isProduction) {
   app.use(errorhandler());
 }
+
+// Set Eta's configuration
+eta.configure({
+  // This tells Eta to look for templates
+  // In the /views directory
+  views: path.join(__dirname, "views")
+})
+  
 
 // Database connection
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017');
