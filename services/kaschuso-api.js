@@ -17,19 +17,19 @@ async function login(username, password, mandator) {
 }
 
 async function getUserInfo(user) {
-    const uri = `${KASCHUSO_API_BASE_URI}/user/info?${createUrlParameter(user.username, getDecryptedPassword(user), user.mandator)}`;
+    const uri = `${KASCHUSO_API_BASE_URI}/user/info?${createUrlParameter(user.username, user.getDecryptedPassword(), user.mandator)}`;
     const res = await axios.get(uri);
     return res.data.userInfo;
 } 
 
 async function scrapeGrades(user) {
-    const uri = `${KASCHUSO_API_BASE_URI}/grades?${createUrlParameter(user.username, getDecryptedPassword(user), user.mandator)}`;
+    const uri = `${KASCHUSO_API_BASE_URI}/grades?${createUrlParameter(user.username, user.getDecryptedPassword(), user.mandator)}`;
     const res = await axios.get(uri);
     return res.data.subjects;
 }
 
 async function scrapeAbsences(user) {
-    const uri = `${KASCHUSO_API_BASE_URI}/absences?${createUrlParameter(user.username, getDecryptedPassword(user), user.mandator)}`;
+    const uri = `${KASCHUSO_API_BASE_URI}/absences?${createUrlParameter(user.username, user.getDecryptedPassword(), user.mandator)}`;
     const res = await axios.get(uri);
     return res.data.absences;
 }
@@ -38,10 +38,6 @@ async function getMandators() {
     const uri = `${KASCHUSO_API_BASE_URI}/mandators`;
     const res = await axios.get(uri);
     return res.data.mandators;
-}
-
-function getDecryptedPassword(user) {
-    return crypter.decrypt(user.credential.hash, user.credential.iv);
 }
 
 module.exports = {

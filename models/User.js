@@ -8,6 +8,7 @@ var Credential = mongoose.model('Credential');
 var uniqueValidator = require('mongoose-unique-validator');
 var jwt = require('jsonwebtoken');
 var secret = require('../config').secret;
+const crypter = require('../services/crypter');
 
 var UserSchema = new mongoose.Schema({
   username: { type: String, required: [true, "can't be blank"], index: true },
@@ -60,6 +61,10 @@ UserSchema.methods.toProfileJSONFor = function () {
     monthlySummary: this.monthlySummary,
     webhookUri: this.webhookUri
   };
+};
+
+UserSchema.methods.getDecryptedPassword = function () {
+  return crypter.decrypt(this.credential.password, this.credential.iv);
 };
 
 mongoose.model('User', UserSchema);
