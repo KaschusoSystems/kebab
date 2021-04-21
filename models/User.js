@@ -1,14 +1,17 @@
 require('./Subject');
+require('./Credential');
 
 var mongoose = require('mongoose');
 var Subject = mongoose.model('Subject');
+var Credential = mongoose.model('Credential');
+
 var uniqueValidator = require('mongoose-unique-validator');
 var jwt = require('jsonwebtoken');
 var secret = require('../config').secret;
 
 var UserSchema = new mongoose.Schema({
   username: { type: String, required: [true, "can't be blank"], index: true },
-  password: { type: String, required: [true, "can't be blank"], index: true },
+  credential: { type: Credential.schema, required: [true, "can't be blank"], index: true },
   mandator: { type: String, required: [true, "can't be blank"], index: true },
   email: String,
   gradeNotifications: Boolean,
@@ -32,7 +35,6 @@ UserSchema.methods.generateJWT = function () {
   // 2 months lol
   exp.setDate(today.getDate() + 60);
 
-  // TODO needed claims?
   return jwt.sign({
     id: this._id,
     username: this.username,
