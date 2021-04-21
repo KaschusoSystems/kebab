@@ -88,7 +88,7 @@ function getChangedSubjects(subjects, newSubjects) {
 }
 
 function findByGrade(grades, grade) {
-    return grades.find(x => x.title === grade.title && x.date === grade.date);
+    return grades.find(x => x.name === grade.name && x.date === grade.date);
 }
 
 function findBySubject(subjects, subject) {
@@ -97,7 +97,7 @@ function findBySubject(subjects, subject) {
 
 function getChangedGrades(grades, newGrades) {
     return newGrades.filter(x => !grades
-        .find(y => x.title === y.title && x.value == y.value)); // '5.5' shall be equal to 5.5 (string == number)
+        .find(y => x.name === y.name && x.value == y.value)); // '5.5' shall be equal to 5.5 (string == number)
 }
 
 module.exports = {

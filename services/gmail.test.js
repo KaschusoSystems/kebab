@@ -72,12 +72,12 @@ test('render grade notification html', async () => {
                 average: 3.5,
                 grades: [
                     {
-                        title: 'Schachnovelle',
+                        name: 'Schachnovelle',
                         value: 4,
                         average: 4.5
                     },
                     {
-                        title: 'Mein Kampf',
+                        name: 'Mein Kampf',
                         value: 3,
                         average: 4.6
                     }
@@ -89,7 +89,7 @@ test('render grade notification html', async () => {
                 average: 5.5,
                 grades: [
                     {
-                        title: 'Lineare Gleichungssysteme',
+                        name: 'Lineare Gleichungssysteme',
                         value: 6,
                         average: 4.3
                     }

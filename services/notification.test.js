@@ -17,13 +17,13 @@ test('get changed grades (no grades changed)', () => {
     const grades = [
         {
             "date": "29.01.2021",
-            "title": "Noise-Cancelling",
+            "name": "Noise-Cancelling",
             "value": "5.625",
             "weighting": "1"
         },
         {
             "date": "26.03.2021",
-            "title": "Schwingungen",
+            "name": "Schwingungen",
             "value": "5.9",
             "points": "17",
             "weighting": "1"
@@ -32,13 +32,13 @@ test('get changed grades (no grades changed)', () => {
     const newGrades = [
         {
             "date": "29.01.2021",
-            "title": "Noise-Cancelling",
+            "name": "Noise-Cancelling",
             "value": "5.625",
             "weighting": "1"
         },
         {
             "date": "26.03.2021",
-            "title": "Schwingungen",
+            "name": "Schwingungen",
             "value": "5.9",
             "points": "17",
             "weighting": "1"
@@ -52,13 +52,13 @@ test('get changed grades (two grades, one changed)', () => {
     const grades = [
         {
             "date": "29.01.2021",
-            "title": "Noise-Cancelling",
+            "name": "Noise-Cancelling",
             "value": "5.625",
             "weighting": "1"
         },
         {
             "date": "26.03.2021",
-            "title": "Schwingungen",
+            "name": "Schwingungen",
             "value": "4.1",
             "points": "11",
             "weighting": "1"
@@ -67,13 +67,13 @@ test('get changed grades (two grades, one changed)', () => {
     const newGrades = [
         {
             "date": "29.01.2021",
-            "title": "Noise-Cancelling",
+            "name": "Noise-Cancelling",
             "value": "5.625",
             "weighting": "1"
         },
         {
             "date": "26.03.2021",
-            "title": "Schwingungen",
+            "name": "Schwingungen",
             "value": "5.9",
             "points": "17",
             "weighting": "1"
@@ -83,7 +83,7 @@ test('get changed grades (two grades, one changed)', () => {
     .toEqual([
         {
             "date": "26.03.2021",
-            "title": "Schwingungen",
+            "name": "Schwingungen",
             "value": "5.9", // changed
             "points": "17", // changed
             "weighting": "1"
@@ -95,7 +95,7 @@ test('get changed grades (one grade, one new grade)', () => {
     const grades = [
         {
             "date": "29.01.2021",
-            "title": "Noise-Cancelling",
+            "name": "Noise-Cancelling",
             "value": "5.625",
             "weighting": "1"
         }
@@ -103,13 +103,13 @@ test('get changed grades (one grade, one new grade)', () => {
     const newGrades = [
         {
             "date": "29.01.2021",
-            "title": "Noise-Cancelling",
+            "name": "Noise-Cancelling",
             "value": "5.625",
             "weighting": "1"
         },
         {
             "date": "26.03.2021",
-            "title": "Schwingungen",
+            "name": "Schwingungen",
             "value": "5.9",
             "points": "17",
             "weighting": "1"
@@ -119,7 +119,7 @@ test('get changed grades (one grade, one new grade)', () => {
     .toEqual([
         {
             "date": "26.03.2021",
-            "title": "Schwingungen",
+            "name": "Schwingungen",
             "value": "5.9",
             "points": "17",
             "weighting": "1"
@@ -131,13 +131,13 @@ test('get changed grades (two grades, one removed -> no changes)', () => {
     const grades = [
         {
             "date": "29.01.2021",
-            "title": "Noise-Cancelling",
+            "name": "Noise-Cancelling",
             "value": "5.625",
             "weighting": "1"
         },
         {
             "date": "26.03.2021",
-            "title": "Schwingungen",
+            "name": "Schwingungen",
             "value": "5.9",
             "points": "17",
             "weighting": "1"
@@ -146,7 +146,7 @@ test('get changed grades (two grades, one removed -> no changes)', () => {
     const newGrades = [
         {
             "date": "29.01.2021",
-            "title": "Noise-Cancelling",
+            "name": "Noise-Cancelling",
             "value": "5.625",
             "weighting": "1"
         }
@@ -164,7 +164,7 @@ test('get changed subjects', () => {
             "grades": [
                 {
                     "date": "08.04.2021",
-                    "title": "Literaturgeschichte",
+                    "name": "Literaturgeschichte",
                     "value": "4.5",
                     "points": "18",
                     "weighting": "1"
@@ -178,7 +178,7 @@ test('get changed subjects', () => {
             "grades": [
                 {
                     "date": "30.03.2021",
-                    "title": "Anwendung Projekt M306",
+                    "name": "Anwendung Projekt M306",
                     "value": "6",
                     "points": "21",
                     "weighting": "1"
@@ -192,7 +192,7 @@ test('get changed subjects', () => {
             "grades": [
                 {
                     "date": "18.03.2021",
-                    "title": "Skalarprodukt",
+                    "name": "Skalarprodukt",
                     "value": "4.7",
                     "points": "8",
                     "weighting": "1"
@@ -206,13 +206,13 @@ test('get changed subjects', () => {
             "grades": [
                 {
                     "date": "29.01.2021",
-                    "title": "Noise-Cancelling",
+                    "name": "Noise-Cancelling",
                     "value": "5.625",
                     "weighting": "1"
                 },
                 {
                     "date": "26.03.2021",
-                    "title": "Schwingungen",
+                    "name": "Schwingungen",
                     "value": "5.9",
                     "points": "17",
                     "weighting": "1"
@@ -228,14 +228,14 @@ test('get changed subjects', () => {
             "grades": [
                 {
                     "date": "22.03.2021",
-                    "title": "Schachnovelle",
+                    "name": "Schachnovelle",
                     "value": "5.25",
                     "points": "12",
                     "weighting": "1"
                 },
                 {
                     "date": "08.04.2021",
-                    "title": "Literaturgeschichte",
+                    "name": "Literaturgeschichte",
                     "value": "4.5",
                     "points": "18",
                     "weighting": "1"
@@ -249,7 +249,7 @@ test('get changed subjects', () => {
             "grades": [
                 {
                     "date": "01.03.2021",
-                    "title": "Interview - Tiger mother",
+                    "name": "Interview - Tiger mother",
                     "weighting": "1"
                 }
             ]
@@ -261,7 +261,7 @@ test('get changed subjects', () => {
             "grades": [
                 {
                     "date": "30.03.2021",
-                    "title": "Anwendung Projekt M306",
+                    "name": "Anwendung Projekt M306",
                     "value": "6",
                     "points": "21",
                     "weighting": "1"
@@ -275,7 +275,7 @@ test('get changed subjects', () => {
             "grades": [
                 {
                     "date": "29.01.2021",
-                    "title": "Noise-Cancelling",
+                    "name": "Noise-Cancelling",
                     "value": "5.625",
                     "weighting": "1"
                 },
@@ -291,7 +291,7 @@ test('get changed subjects', () => {
             "grades": [
                 {
                     "date": "22.03.2021",
-                    "title": "Schachnovelle",
+                    "name": "Schachnovelle",
                     "value": "5.25",
                     "points": "12",
                     "weighting": "1"
@@ -305,7 +305,7 @@ test('get changed subjects', () => {
             "grades": [
                 {
                     "date": "01.03.2021",
-                    "title": "Interview - Tiger mother",
+                    "name": "Interview - Tiger mother",
                     "weighting": "1"
                 }
             ]
@@ -321,7 +321,7 @@ test('merge subject object', () => {
         "grades": [
             {
                 "date": "22.03.2021",
-                "title": "Schachnovelle",
+                "name": "Schachnovelle",
                 "value": "5.25",
                 "points": "12",
                 "weighting": "1"
@@ -335,14 +335,14 @@ test('merge subject object', () => {
         "grades": [
             {
                 "date": "22.03.2021",
-                "title": "Schachnovelle",
+                "name": "Schachnovelle",
                 "value": "5.25",
                 "points": "12",
                 "weighting": "1"
             },
             {
                 "date": "08.04.2021",
-                "title": "Literaturgeschichte",
+                "name": "Literaturgeschichte",
                 "value": "4.5",
                 "points": "18",
                 "weighting": "1"
@@ -358,14 +358,14 @@ test('merge subject object', () => {
             "grades": [
                 {
                     "date": "08.04.2021",
-                    "title": "Literaturgeschichte",
+                    "name": "Literaturgeschichte",
                     "value": 4.5,
                     "points": 18,
                     "weighting": 1
                 },
                 {
                     "date": "22.03.2021",
-                    "title": "Schachnovelle",
+                    "name": "Schachnovelle",
                     "value": 5.25,
                     "points": 12,
                     "weighting": 1
@@ -384,7 +384,7 @@ test('update subjects', () => {
             "grades": [
                 {
                     "date": "08.04.2021",
-                    "title": "Literaturgeschichte",
+                    "name": "Literaturgeschichte",
                     "value": "4.5",
                     "points": "18",
                     "weighting": "1"
@@ -398,7 +398,7 @@ test('update subjects', () => {
             "grades": [
                 {
                     "date": "30.03.2021",
-                    "title": "Anwendung Projekt M306",
+                    "name": "Anwendung Projekt M306",
                     "value": "6",
                     "points": "21",
                     "weighting": "1"
@@ -412,7 +412,7 @@ test('update subjects', () => {
             "grades": [
                 {
                     "date": "18.03.2021",
-                    "title": "Skalarprodukt",
+                    "name": "Skalarprodukt",
                     "value": "4.7",
                     "points": "8",
                     "weighting": "1"
@@ -426,13 +426,13 @@ test('update subjects', () => {
             "grades": [
                 {
                     "date": "29.01.2021",
-                    "title": "Noise-Cancelling",
+                    "name": "Noise-Cancelling",
                     "value": "5.625",
                     "weighting": "1"
                 },
                 {
                     "date": "26.03.2021",
-                    "title": "Schwingungen",
+                    "name": "Schwingungen",
                     "value": "5.9",
                     "points": "17",
                     "weighting": "1"
@@ -448,7 +448,7 @@ test('update subjects', () => {
             "grades": [
                 {
                     "date": "22.03.2021",
-                    "title": "Schachnovelle",
+                    "name": "Schachnovelle",
                     "value": "5.25",
                     "points": "12",
                     "weighting": "1"
@@ -462,7 +462,7 @@ test('update subjects', () => {
             "grades": [
                 {
                     "date": "01.03.2021",
-                    "title": "Interview - Tiger mother",
+                    "name": "Interview - Tiger mother",
                     "weighting": "1"
                 }
             ]
@@ -478,14 +478,14 @@ test('update subjects', () => {
                 "grades": [
                     {
                         "date": "22.03.2021",
-                        "title": "Schachnovelle",
+                        "name": "Schachnovelle",
                         "value": 5.25,
                         "points": 12,
                         "weighting": 1
                     },
                     {
                         "date": "08.04.2021",
-                        "title": "Literaturgeschichte",
+                        "name": "Literaturgeschichte",
                         "value": 4.5,
                         "points": 18,
                         "weighting": 1
@@ -499,7 +499,7 @@ test('update subjects', () => {
                 "grades": [
                     {
                         "date": "01.03.2021",
-                        "title": "Interview - Tiger mother",
+                        "name": "Interview - Tiger mother",
                         "weighting": 1
                     }
                 ]
@@ -512,14 +512,14 @@ test('find by grade (one grade matches)', () => {
     const grades = [
         {
             "date": "22.03.2021",
-            "title": "Schachnovelle",
+            "name": "Schachnovelle",
             "value": "5.25",
             "points": "12",
             "weighting": "1"
         },
         {
             "date": "08.04.2021",
-            "title": "Literaturgeschichte",
+            "name": "Literaturgeschichte",
             "value": "4.5",
             "points": "18",
             "weighting": "1"
@@ -527,7 +527,7 @@ test('find by grade (one grade matches)', () => {
     ];
     const grade = {
         "date": "08.04.2021",
-        "title": "Literaturgeschichte",
+        "name": "Literaturgeschichte",
         "value": "5.5",
         "points": "22",
         "weighting": "0.3"
@@ -535,25 +535,25 @@ test('find by grade (one grade matches)', () => {
     expect(findByGrade(grades, grade))
     .toEqual({
         "date": "08.04.2021",
-        "title": "Literaturgeschichte",
+        "name": "Literaturgeschichte",
         "value": "4.5",
         "points": "18",
         "weighting": "1"
     });
 });
 
-test('find by grade (grade matches not by title)', () => {
+test('find by grade (grade matches not by name)', () => {
     const grades = [
         {
             "date": "22.03.2021",
-            "title": "Schachnovelle",
+            "name": "Schachnovelle",
             "value": "5.25",
             "points": "12",
             "weighting": "1"
         },
         {
             "date": "08.04.2021",
-            "title": "Literaturgeschichte",
+            "name": "Literaturgeschichte",
             "value": "4.5",
             "points": "18",
             "weighting": "1"
@@ -561,7 +561,7 @@ test('find by grade (grade matches not by title)', () => {
     ];
     const grade = {
         "date": "08.04.2021",
-        "title": "Mein Kampf",
+        "name": "Mein Kampf",
         "value": "5.5",
         "points": "22",
         "weighting": "0.3"
@@ -574,14 +574,14 @@ test('find by grade (grade matches not by date)', () => {
     const grades = [
         {
             "date": "22.03.2021",
-            "title": "Schachnovelle",
+            "name": "Schachnovelle",
             "value": "5.25",
             "points": "12",
             "weighting": "1"
         },
         {
             "date": "08.04.2021",
-            "title": "Literaturgeschichte",
+            "name": "Literaturgeschichte",
             "value": "4.5",
             "points": "18",
             "weighting": "1"
@@ -589,7 +589,7 @@ test('find by grade (grade matches not by date)', () => {
     ];
     const grade = {
         "date": "01.01.2019",
-        "title": "Literaturgeschichte",
+        "name": "Literaturgeschichte",
         "value": "5.5",
         "points": "22",
         "weighting": "0.3"

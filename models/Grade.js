@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 
 var GradeSchema = new mongoose.Schema({
   date: String,
-  title: String,
+  name: String,
   value: Number,
   weighting: Number,
   points: Number
@@ -11,7 +11,7 @@ var GradeSchema = new mongoose.Schema({
 GradeSchema.methods.toJSONFor = function() {
   return {
     date: this.date,
-    title: this.title,
+    name: this.name,
     value: this.value,
     weighting: this.weighting,
     points: this.points,
