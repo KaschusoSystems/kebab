@@ -1,10 +1,11 @@
 const nodemailer = require("nodemailer");
-const eta = require("eta")
+const eta = require("eta");
+
+const etaEnv = require('../config').etaEnv;
 
 const gmailTransporter = createTransporter();
-const MAIL_SENDER = `"Kaschuso Notifications 📢" <${process.env.GMAIL_USERNAME}>`;
-const MAIL_SUBJECT = 'You have new grades in your Kaschuso ❗';
-const KASCHUSO_BASE_URL = process.env.KASCHUSO_BASE_URL || 'https://kaschuso.so.ch/';
+const MAIL_SENDER = `"Kaschuso Benachrichtigungen 📢" <${process.env.GMAIL_USERNAME}>`;
+const MAIL_SUBJECT = 'Auf Kaschuso sind neue Noten verfügbar ❗';
 
 function createTransporter() {
     return nodemailer.createTransport({
@@ -17,25 +18,52 @@ function createTransporter() {
     });
 }
 
-async function createGradeNotificationText(user, subjects) {
-    return await eta.renderFile("./grades", { 
-        env: {
-            kaschuso: (process.env.KASCHUSO_BASE_URL || 'https://kaschuso.so.ch/') + user.mandator,
-            gyros: 'http://localhost/' // add gyros environment var
-        },
+function getEmoji(subjects) {
+    const gradeValues = subjects.flatMap(subject => subject.grades)
+        .map(grade => parseInt(grade.value));
+
+    const average = gradeValues.reduce((a, b) => a + b) / gradeValues.length;
+    if (average >= 6) {
+        return '😎';
+    } else if (average >= 5) {
+        return '😊';
+    } else if (average >= 4) {
+        return '😉';
+    } else if (average >= 3) {
+        return '🧐';
+    } else if (average >= 2) {
+        return '😳';
+    } else {
+        return '😨';
+    }
+}
+
+async function renderGradeNotificationHtml(env, user, subjects) {
+    return await eta.renderFile("./grades-mail", { 
+        env: env,
         user: user, 
-        subjects: subjects 
+        subjects: subjects,
+        emoji: getEmoji(subjects)
     });
+}
+
+async function getGradeMail(user, subjects) {
+    return {
+        from: MAIL_SENDER,
+        to: user.email,
+        subject: MAIL_SUBJECT,
+        html: await renderGradeNotificationHtml(etaEnv, user, subjects),
+        attachments: [{
+            filename: 'logo.jpg',
+            path: './views/img/logo.jpg',
+            cid: 'logo'
+        }]
+    };
 }
 
 async function sendGradeNotification(user, subjects) {
     try {
-        await gmailTransporter.sendMail({
-            from: MAIL_SENDER,
-            to: user.email,
-            subject: MAIL_SUBJECT,
-            html: await createGradeNotificationText(user, subjects)
-        });
+        await gmailTransporter.sendMail(await getGradeMail(user, subjects));
         console.log('Notification sent');
     } catch (e) {
         console.log(e);
@@ -49,5 +77,8 @@ async function sendAbsenceReminder(user, absences) {
 
 module.exports = {
     sendGradeNotification,
-    sendAbsenceReminder
+    sendAbsenceReminder,
+    // tests
+    getEmoji,
+    renderGradeNotificationHtml,
 };

@@ -13,7 +13,7 @@ var SubjectSchema = new mongoose.Schema({
 
 SubjectSchema.methods.addGrade = async function (grade) {
     this.grades.unshift(grade);
-    return await this.save();
+    return this;
 }
 
 SubjectSchema.methods.toJSONFor = function () {

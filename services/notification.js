@@ -24,7 +24,8 @@ async function processGradeNotifications() {
                 await gmail.sendGradeNotification(user, changedSubjects);
                 
                 // Only update db if changes detected
-                await updateSubjects(savedSubjects, changedSubjects, user);
+                await Promise.all((await updateSubjects(savedSubjects, changedSubjects, user))
+                    .map(subject => subject.save()));
                 
                 if (user.webhookUri) {
                     webhook.triggerWebhook(user.webhookUri, changedSubjects);
@@ -39,17 +40,20 @@ async function processGradeNotifications() {
     }
 }
 
+/**
+ * This method does not save changes made to the subjects
+ * 
+ * @returns only the changed subjects
+ */
 async function updateSubjects(subjects, changedSubjects, user) {
-    await Promise.all(changedSubjects.map(async changedSubject => {
+    return await Promise.all(changedSubjects.map(async changedSubject => {
         const subject = findBySubject(subjects, changedSubject);
         if (subject) {
-            await mergeSubjectObject(subject, changedSubject);
+            return await mergeSubjectObject(subject, changedSubject);
         } else {
-            const newSubject = await user.addSubject(changedSubject);
-            subjects.push(newSubject);
+            return await user.addSubject(changedSubject);
         }
     }));
-    return subjects;
 }
 
 async function mergeSubjectObject(subject, changedSubject) {
@@ -58,7 +62,6 @@ async function mergeSubjectObject(subject, changedSubject) {
         const existingGrade = findByGrade(subject.grades, x);
         if (existingGrade) {
             Object.assign(existingGrade, x);
-            await subject.save();
         } else {
             await subject.addGrade(x);
         }

@@ -11,7 +11,7 @@ const http = require('http'),
   errorhandler = require('errorhandler'),
   mongoose = require('mongoose'),
   secret = require('./config').secret,
-  eta = require("eta");
+  eta = require('eta');
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -34,8 +34,8 @@ if (!isProduction) {
 eta.configure({
   // This tells Eta to look for templates
   // In the /views directory
-  views: path.join(__dirname, "views")
-})
+  views: path.join(__dirname, 'views')
+});
   
 
 // Database connection

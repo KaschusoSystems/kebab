@@ -26,7 +26,7 @@ UserSchema.plugin(uniqueValidator, { message: 'is already taken.' });
 UserSchema.methods.addSubject = async function (subject) {
     const subjectModel = new Subject(subject);
     subjectModel.user = this;
-    return await subjectModel.save();
+    return subjectModel;
 }
 
 UserSchema.methods.generateJWT = function () {

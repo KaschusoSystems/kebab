@@ -4,27 +4,6 @@ const mongoose = require('mongoose')
 var Subject = mongoose.model('Subject');
 var User = mongoose.model('User');
 
-beforeAll(async () => {
-    const url = `mongodb://localhost:27017/testKebab`
-    await mongoose.connect(url)
-})
-
-async function removeAllCollections () {
-    const collections = Object.keys(mongoose.connection.collections)
-    for (const collectionName of collections) {
-        const collection = mongoose.connection.collections[collectionName]
-        await collection.deleteMany()
-    }
-}
-
-afterEach(async () => {
-    await removeAllCollections()
-})
-
-afterAll(async () => {
-    await mongoose.connection.close()
-})
-
 const {
     getChangedGrades,
     getChangedSubjects,
@@ -509,54 +488,6 @@ test('update subjects', () => {
                         "title": "Literaturgeschichte",
                         "value": 4.5,
                         "points": 18,
-                        "weighting": 1
-                    }
-                ]
-            },
-            {
-                "class": "M326-INF17A,INF17B-MOSD",
-                "name": "M326 Objektorientiert entwerfen und implementieren",
-                "average": "6.000",
-                "grades": [
-                    {
-                        "date": "30.03.2021",
-                        "title": "Anwendung Projekt M306",
-                        "value": 6,
-                        "points": 21,
-                        "weighting": 1
-                    }
-                ]
-            },
-            {
-                "class": "MS-BM1_TE17A-HARS",
-                "name": "Mathematik Schwerpunkt",
-                "average": "4.700",
-                "grades": [
-                    {
-                        "date": "18.03.2021",
-                        "title": "Skalarprodukt",
-                        "value": 4.7,
-                        "points": 8,
-                        "weighting": 1
-                    }
-                ]
-            },
-            {
-                "class": "PH-BM1_TE17A-HARS",
-                "name": "Physik",
-                "average": "5.763",
-                "grades": [
-                    {
-                        "date": "29.01.2021",
-                        "title": "Noise-Cancelling",
-                        "value": 5.625,
-                        "weighting": 1
-                    },
-                    {
-                        "date": "26.03.2021",
-                        "title": "Schwingungen",
-                        "value": 5.9,
-                        "points": 17,
                         "weighting": 1
                     }
                 ]
