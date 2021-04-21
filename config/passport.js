@@ -2,9 +2,6 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
-var Credential = mongoose.model('Credential');
-
-const crypter = require('../services/crypter');
 
 const kaschusoApi = require('../services/kaschuso-api');
 
@@ -30,36 +27,25 @@ passport.use(new LocalStrategy({
   }).then(async function (user) {
     if (!user) {
       user = await createNewUser(username, password, mandator);
-    } else {
-      await syncUserPassword(user, password);
     }
 
-    return done(null, user);
+    user.setCredential(password);
+
+    return done(null, await user.save());
   }).catch(done);
 }));
 
 async function createNewUser(username, password, mandator) {
   const user = new User();
   user.username = username;
-  user.credential = createUserCredential(password);
   user.mandator = mandator;
+  user.setCredential(password);
 
   const userInfo = await kaschusoApi.getUserInfo(user);
   user.email = userInfo.privateEmail;
   user.gradeNotifications = true;
   user.absenceReminders = true;
   user.monthlySummary = true;
-  await user.save();
-  return user;
-}
-
-async function syncUserPassword(user, password) {
-  user.credential = createUserCredential(password);
-  await user.save();
-}
-
-function createUserCredential(password) {
-  const credentialModel = new Credential();
-  Object.assign(credentialModel, crypter.encrypt(password));
-  return credentialModel;
+    
+  return await user.save();
 }

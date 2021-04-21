@@ -67,4 +67,13 @@ UserSchema.methods.getDecryptedPassword = function () {
   return crypter.decrypt(this.credential.password, this.credential.iv);
 };
 
+UserSchema.methods.setCredential = function (password) {
+  const crypterResult = crypter.encrypt(password);
+  const credentialModel = new Credential();
+  credentialModel.iv = crypterResult.iv;
+  credentialModel.password = crypterResult.encrypted;
+
+  this.credential = credentialModel;
+};
+
 mongoose.model('User', UserSchema);

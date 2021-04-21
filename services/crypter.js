@@ -9,7 +9,7 @@ function encrypt(text) {
     const encrypted = Buffer.concat([cipher.update(text), cipher.final()]);
     return {
         iv: iv.toString('hex'),
-        password: encrypted.toString('hex')
+        encrypted: encrypted.toString('hex')
     };
 }
 
