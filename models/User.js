@@ -1,14 +1,18 @@
 require('./Subject');
+require('./Credential');
 
 var mongoose = require('mongoose');
 var Subject = mongoose.model('Subject');
+var Credential = mongoose.model('Credential');
+
 var uniqueValidator = require('mongoose-unique-validator');
 var jwt = require('jsonwebtoken');
 var secret = require('../config').secret;
+const crypter = require('../services/crypter');
 
 var UserSchema = new mongoose.Schema({
   username: { type: String, required: [true, "can't be blank"], index: true },
-  password: { type: String, required: [true, "can't be blank"], index: true },
+  credential: { type: Credential.schema, required: [true, "can't be blank"], index: true },
   mandator: { type: String, required: [true, "can't be blank"], index: true },
   email: String,
   gradeNotifications: Boolean,
@@ -32,7 +36,6 @@ UserSchema.methods.generateJWT = function () {
   // 2 months lol
   exp.setDate(today.getDate() + 60);
 
-  // TODO needed claims?
   return jwt.sign({
     id: this._id,
     username: this.username,
@@ -58,6 +61,19 @@ UserSchema.methods.toProfileJSONFor = function () {
     monthlySummary: this.monthlySummary,
     webhookUri: this.webhookUri
   };
+};
+
+UserSchema.methods.getDecryptedPassword = function () {
+  return crypter.decrypt(this.credential.password, this.credential.iv);
+};
+
+UserSchema.methods.setCredential = function (password) {
+  const crypterResult = crypter.encrypt(password);
+  const credentialModel = new Credential();
+  credentialModel.iv = crypterResult.iv;
+  credentialModel.password = crypterResult.encrypted;
+
+  this.credential = credentialModel;
 };
 
 mongoose.model('User', UserSchema);

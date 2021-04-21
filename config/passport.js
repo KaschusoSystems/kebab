@@ -11,35 +11,41 @@ passport.use(new LocalStrategy({
   passReqToCallback: true
 }, async function (req, username, password, done) {
   const mandator = req.body.mandator;
-  console.log(`passport validation params: ${JSON.stringify({ username, password, mandator })}`);
 
   const isLoginValid = await kaschusoApi.login(username, password, mandator);
   if (!isLoginValid) {
-    return done(null, false, { errors: { 'Kaschuso login': 'is invalid' } });
+    return done(null, false, {
+      errors: {
+        'Kaschuso login': 'is invalid'
+      }
+    });
   }
 
-  User.findOne({ username: username, mandator: mandator }).then(async function (user) {
+  User.findOne({
+    username: username,
+    mandator: mandator
+  }).then(async function (user) {
     if (!user) {
-      var user = new User();
-      user.username = username;
-      user.password = password;
-      user.mandator = mandator;
-
-      const userInfo = await kaschusoApi.getUserInfo(user);
-      user.email = userInfo.privateEmail;
-      user.gradeNotifications = true;
-      user.absenceReminders = true;
-      user.monthlySummary = true;
-
-      await user.save();
+      user = await createNewUser(username, password, mandator);
     }
 
-    if (user.password !== password) {
-      user.password = password;
-      await user.save();
-    }
+    user.setCredential(password);
 
-    return done(null, user);
+    return done(null, await user.save());
   }).catch(done);
 }));
 
+async function createNewUser(username, password, mandator) {
+  const user = new User();
+  user.username = username;
+  user.mandator = mandator;
+  user.setCredential(password);
+
+  const userInfo = await kaschusoApi.getUserInfo(user);
+  user.email = userInfo.privateEmail;
+  user.gradeNotifications = true;
+  user.absenceReminders = true;
+  user.monthlySummary = true;
+    
+  return await user.save();
+}

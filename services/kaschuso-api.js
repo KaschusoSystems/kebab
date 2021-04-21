@@ -1,4 +1,6 @@
 const axios = require('axios');
+const crypter = require('./crypter');
+
 const KASCHUSO_API_BASE_URI = process.env.KASCHUSO_API_URI || 'http://localhost:3001/api';
 
 function createUrlParameter(username, password, mandator) {
@@ -15,19 +17,19 @@ async function login(username, password, mandator) {
 }
 
 async function getUserInfo(user) {
-    const uri = `${KASCHUSO_API_BASE_URI}/user/info?${createUrlParameter(user.username, user.password, user.mandator)}`;
+    const uri = `${KASCHUSO_API_BASE_URI}/user/info?${createUrlParameter(user.username, user.getDecryptedPassword(), user.mandator)}`;
     const res = await axios.get(uri);
     return res.data.userInfo;
 } 
 
 async function scrapeGrades(user) {
-    const uri = `${KASCHUSO_API_BASE_URI}/grades?${createUrlParameter(user.username, user.password, user.mandator)}`;
+    const uri = `${KASCHUSO_API_BASE_URI}/grades?${createUrlParameter(user.username, user.getDecryptedPassword(), user.mandator)}`;
     const res = await axios.get(uri);
     return res.data.subjects;
 }
 
 async function scrapeAbsences(user) {
-    const uri = `${KASCHUSO_API_BASE_URI}/absences?${createUrlParameter(user.username, user.password, user.mandator)}`;
+    const uri = `${KASCHUSO_API_BASE_URI}/absences?${createUrlParameter(user.username, user.getDecryptedPassword(), user.mandator)}`;
     const res = await axios.get(uri);
     return res.data.absences;
 }
