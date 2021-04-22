@@ -82,8 +82,8 @@ async function sendWelcomeMail(user) {
             },
             env: etaEnv,
             user: user,
-        })
-        await gmailTransporter.sendMail(await getMail(user.email, MAIL_SUBJECT, html));
+        });
+        await gmailTransporter.sendMail(await getMail(user.email, 'Kaschuso Benachrichtigungen sind aktiviert🎉', html));
         console.log('Welcome Mail sent');
     } catch (e) {
         console.log(e);
