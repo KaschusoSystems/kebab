@@ -1,6 +1,6 @@
 require('../models/User');
 
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 var Subject = mongoose.model('Subject');
 var User = mongoose.model('User');
 

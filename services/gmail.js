@@ -73,6 +73,24 @@ async function sendGradeNotification(user, subjects) {
     }
 }
 
+async function sendAbsenceNotification(user, absences) {
+    try {
+        const html = await eta.renderFile('mail', {
+            preheader: 'Auf Kaschuso sind neue Absenzen eingetragen🔔',
+            pages: {
+                main: 'absences'
+            },
+            env: etaEnv,
+            user: user, 
+            absences: absences
+        });
+        await gmailTransporter.sendMail(await getMail(user.email, MAIL_SUBJECT, html));
+        console.log('Absence Notification sent');
+    } catch (e) {
+        console.log(e);
+    }
+}
+
 async function sendWelcomeMail(user) {
     try {
         const html = await eta.renderFile('mail', {
@@ -98,6 +116,7 @@ async function sendAbsenceReminder(user, absences) {
 module.exports = {
     sendWelcomeMail,
     sendGradeNotification,
+    sendAbsenceNotification,
     sendAbsenceReminder,
     // tests
     getEmoji,

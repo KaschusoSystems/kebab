@@ -46,12 +46,16 @@ async function createNewUser(username, password, mandator) {
   user.name = userInfo.name;
   user.email = userInfo.privateEmail;
   user.gradeNotifications = true;
+  user.absenceNotifications = true;
   user.absenceReminders = true;
   user.monthlySummary = true;
 
-  // scrape grades so the user does not recieve an initial email => do non blocking
+  // initial scrape so the user does not recieve an initial email => do non blocking
   kaschusoApi.scrapeGrades(user).then(subjects => {
     Promise.all(subjects.map(async subject => await user.addSubject(subject).save()));
+  });
+  kaschusoApi.scrapeAbsences(user).then(absences => {
+    Promise.all(absences.map(async absence => await user.addAbsence(absence).save()));
   });
 
   // send welcome mail => visual feedback that the service works
