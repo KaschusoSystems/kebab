@@ -1,5 +1,5 @@
-const nodemailer = require("nodemailer");
-const eta = require("eta");
+const nodemailer = require('nodemailer');
+const eta = require('eta');
 
 const etaEnv = require('../config').etaEnv;
 
@@ -39,11 +39,16 @@ function getEmoji(subjects) {
 }
 
 async function renderGradeNotificationHtml(env, user, subjects) {
-    return await eta.renderFile("./grades-mail", { 
+    const emoji = getEmoji(subjects);
+    return await eta.renderFile('mail', {
+        preheader: `Auf Kaschuso sind für ${subjects.map(x => x.name).join(', ')} neue Noten verfügbar${emoji}`,
+        pages: {
+            main: 'grades'
+        },
         env: env,
         user: user, 
         subjects: subjects,
-        emoji: getEmoji(subjects)
+        emoji: emoji
     });
 }
 

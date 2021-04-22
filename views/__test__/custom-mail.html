@@ -187,7 +187,7 @@
   <!--[if gte mso 9]><xml><o:OfficeDocumentSettings><o:AllowPNG/><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml><![endif]-->
 
   <body style="width: 100% !important; margin: 0; padding: 0; mso-line-height-rule: exactly; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; background-color: #EEEEEE; background-image: url(''); background-position: center; background-repeat: repeat; background-size: unset">
-    <span style="color: transparent; display: none; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;">Auf Kaschuso sind für <%= it.subjects.map(x => x.name).join(', ') %> neue Noten verfügbar<%= it.emoji %></span>
+    <span style="color: transparent; display: none; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;">Short description of mail</span>
     <table width="100%" height="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" class="template-body" style="padding: 50px 0px; table-layout: fixed;">
       <tbody>
         <tr>
@@ -206,8 +206,7 @@
                       <tbody class="components__item" draggable="false">
                         <tr>
                           <td>
-                            <%~ includeFile("header", it) %>
-
+                            This is just a custom header: custom header text goes here
                           </td>
                         </tr>
                         <tr height="10" class="card-spacing" style="font-size: 0px;">
@@ -217,8 +216,7 @@
                       <tbody class="components__item" draggable="false">
                         <tr>
                           <td>
-                            <%~ includeFile("grades", it) %>
-
+                            This is just and easy test with a variable: very cool variable
                           </td>
                         </tr>
                         <tr height="10" class="card-spacing" style="font-size: 0px;">
@@ -228,8 +226,7 @@
                       <tbody class="components__item" draggable="false" style="">
                         <tr>
                           <td>
-                            <%~ includeFile("footer", it) %>
-
+                            This is just a custom footer: custom footer text goes here
                           </td>
                         </tr>
                       </tbody>

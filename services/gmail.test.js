@@ -1,4 +1,5 @@
 const fs = require('fs'),
+    path = require('path'),
     eta = require('eta');
 
 const {
@@ -98,5 +99,5 @@ test('render grade notification html', async () => {
         ]
     );
 
-    expect(html).toEqual(fs.readFileSync('./__test__/grades.html', 'utf8'));
+    expect(html).toEqual(fs.readFileSync('./views/__test__/grades-mail.html', 'utf8'));
 });
