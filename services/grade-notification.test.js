@@ -11,7 +11,7 @@ const {
     updateSubjects,
     findByGrade,
     findBySubject,
-} = require('./notification');
+} = require('./grade-notification');
 
 test('get changed grades (no grades changed)', () => {
     const grades = [
