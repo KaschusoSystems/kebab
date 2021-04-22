@@ -46,6 +46,11 @@ async function createNewUser(username, password, mandator) {
   user.gradeNotifications = true;
   user.absenceReminders = true;
   user.monthlySummary = true;
-    
+
+  // scrape grades so the user does not recieve an initial email => do non blocking
+  kaschusoApi.scrapeGrades(user).then(subjects => {
+    Promise.all(subjects.map(async subject => await user.addSubject(subject).save()));
+  });
+
   return await user.save();
 }

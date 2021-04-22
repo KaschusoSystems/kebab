@@ -23,10 +23,10 @@ var UserSchema = new mongoose.Schema({
 
 UserSchema.plugin(uniqueValidator, { message: 'is already taken.' });
 
-UserSchema.methods.addSubject = async function (subject) {
-    const subjectModel = new Subject(subject);
-    subjectModel.user = this;
-    return subjectModel;
+UserSchema.methods.addSubject = function (subject) {
+  const subjectModel = new Subject(subject);
+  subjectModel.user = this;
+  return subjectModel;
 }
 
 UserSchema.methods.generateJWT = function () {
