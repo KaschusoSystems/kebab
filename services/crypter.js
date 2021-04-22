@@ -13,9 +13,9 @@ function encrypt(text) {
     };
 }
 
-function decrypt(hash, iv) {
+function decrypt(encrypted, iv) {
     const decipher = crypto.createDecipheriv(algorithm, secretKey, Buffer.from(iv, 'hex'));
-    const decrpyted = Buffer.concat([decipher.update(Buffer.from(hash, 'hex')), decipher.final()]);
+    const decrpyted = Buffer.concat([decipher.update(Buffer.from(encrypted, 'hex')), decipher.final()]);
     return decrpyted.toString();
 }
 
@@ -25,5 +25,7 @@ function createIv() {
 
 module.exports = {
     encrypt,
-    decrypt
+    decrypt,
+    // tests
+    createIv
 }
