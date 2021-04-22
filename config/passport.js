@@ -4,6 +4,7 @@ var mongoose = require('mongoose');
 var User = mongoose.model('User');
 
 const kaschusoApi = require('../services/kaschuso-api');
+const gmail = require('../services/gmail');
 
 passport.use(new LocalStrategy({
   usernameField: 'username',
@@ -42,6 +43,7 @@ async function createNewUser(username, password, mandator) {
   user.setCredential(password);
 
   const userInfo = await kaschusoApi.getUserInfo(user);
+  user.name = userInfo.name;
   user.email = userInfo.privateEmail;
   user.gradeNotifications = true;
   user.absenceReminders = true;
@@ -51,6 +53,9 @@ async function createNewUser(username, password, mandator) {
   kaschusoApi.scrapeGrades(user).then(subjects => {
     Promise.all(subjects.map(async subject => await user.addSubject(subject).save()));
   });
+
+  // send welcome mail => visual feedback that the service works
+  gmail.sendWelcomeMail(user);
 
   return await user.save();
 }
