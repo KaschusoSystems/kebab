@@ -37,7 +37,7 @@ test('render mail (no main page defined)', async () => {
         user: {
             mandator: 'school',
         },
-    })).rejects.toThrow(TypeError);
+    })).rejects.toThrow();
 });
 
 test('render mail (custom header, main and footer)', async () => {
