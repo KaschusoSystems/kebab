@@ -4,12 +4,10 @@
   "description": "conduit on node",
   "main": "app.js",
   "scripts": {
-    "mongo:start": "docker run --name mongo -p 3000:3000 mongo & sleep 5",
     "start": "node ./app.js",
     "dev": "nodemon ./app.js",
     "test": "jest",
-    "stop": "lsof -ti :3000 | xargs kill",
-    "mongo:stop": "docker stop mongo && docker rm mongo"
+    "stop": "lsof -ti :3000 | xargs kill"
   },
   "repository": {
     "type": "git",
@@ -30,8 +28,8 @@
     "jsonwebtoken": "7.1.9",
     "method-override": "2.3.5",
     "methods": "1.1.2",
-    "mongoose": "4.4.10",
-    "mongoose-unique-validator": "1.0.2",
+    "mongoose": "5.12.5",
+    "mongoose-unique-validator": "2.0.3",
     "morgan": "1.7.0",
     "node-cron": "^3.0.0",
     "nodemailer": "^6.5.0",
@@ -43,7 +41,6 @@
   },
   "devDependencies": {
     "jest": "^26.6.3",
-    "newman": "^3.8.2",
     "nodemon": "^1.11.0"
   }
 }
