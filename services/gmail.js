@@ -1,5 +1,5 @@
-const nodemailer = require("nodemailer");
-const eta = require("eta");
+const nodemailer = require('nodemailer');
+const eta = require('eta');
 
 const etaEnv = require('../config').etaEnv;
 
@@ -38,21 +38,13 @@ function getEmoji(subjects) {
     }
 }
 
-async function renderGradeNotificationHtml(env, user, subjects) {
-    return await eta.renderFile("./grades-mail", { 
-        env: env,
-        user: user, 
-        subjects: subjects,
-        emoji: getEmoji(subjects)
-    });
-}
 
-async function getGradeMail(user, subjects) {
+async function getMail(email, mailSubject, html) {
     return {
         from: MAIL_SENDER,
-        to: user.email,
-        subject: MAIL_SUBJECT,
-        html: await renderGradeNotificationHtml(etaEnv, user, subjects),
+        to: email,
+        subject: mailSubject,
+        html: html,
         attachments: [{
             filename: 'logo.jpg',
             path: './views/img/logo.jpg',
@@ -63,8 +55,36 @@ async function getGradeMail(user, subjects) {
 
 async function sendGradeNotification(user, subjects) {
     try {
-        await gmailTransporter.sendMail(await getGradeMail(user, subjects));
-        console.log('Notification sent');
+        const emoji = getEmoji(subjects);
+        const html = await eta.renderFile('mail', {
+            preheader: `Auf Kaschuso sind für ${subjects.map(x => x.name).join(', ')} neue Noten verfügbar${emoji}`,
+            pages: {
+                main: 'grades'
+            },
+            env: etaEnv,
+            user: user, 
+            subjects: subjects,
+            emoji: emoji
+        });
+        await gmailTransporter.sendMail(await getMail(user.email, MAIL_SUBJECT, html));
+        console.log('Grade Notification sent');
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+async function sendWelcomeMail(user) {
+    try {
+        const html = await eta.renderFile('mail', {
+            preheader: 'Kaschuso Benachrichtigungen sind aktiviert🎉',
+            pages: {
+                main: 'welcome'
+            },
+            env: etaEnv,
+            user: user,
+        });
+        await gmailTransporter.sendMail(await getMail(user.email, 'Kaschuso Benachrichtigungen sind aktiviert🎉', html));
+        console.log('Welcome Mail sent');
     } catch (e) {
         console.log(e);
     }
@@ -76,9 +96,9 @@ async function sendAbsenceReminder(user, absences) {
 }
 
 module.exports = {
+    sendWelcomeMail,
     sendGradeNotification,
     sendAbsenceReminder,
     // tests
     getEmoji,
-    renderGradeNotificationHtml,
 };

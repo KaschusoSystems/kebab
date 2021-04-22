@@ -1,6 +1,6 @@
 module.exports = {
   secret: process.env.NODE_ENV === 'production' ? process.env.SECRET : 'kebab',
-  etaEnv:  {
+  etaEnv: {
     kaschuso: process.env.KASCHUSO_BASE_URL || 'https://kaschuso.so.ch/',
     gyros: process.env.GYROS_BASE_URL || 'http://localhost/',
     colors: {
@@ -8,5 +8,5 @@ module.exports = {
         sufficient: '#FFD166',
         good: '#06D6A0'
     }
-}
+  }
 };

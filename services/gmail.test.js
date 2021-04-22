@@ -1,9 +1,9 @@
 const fs = require('fs'),
+    path = require('path'),
     eta = require('eta');
 
 const {
     getEmoji,
-    renderGradeNotificationHtml,
 } = require('./gmail');
 
 beforeAll(async () => {
@@ -53,8 +53,44 @@ test('get emoji', () => {
 });
 
 test('render grade notification html', async () => {
-    const html = await renderGradeNotificationHtml(
+    const subjects = [
         {
+            name: 'Deutsch',
+            average: 3.5,
+            grades: [
+                {
+                    name: 'Schachnovelle',
+                    value: 4,
+                    average: 4.5
+                },
+                {
+                    name: 'Mein Kampf',
+                    value: 3,
+                    average: 4.6
+                }
+            ]
+        },
+        
+        {
+            name: 'Mathematik',
+            average: 5.5,
+            grades: [
+                {
+                    name: 'Lineare Gleichungssysteme',
+                    value: 6,
+                    average: 4.3
+                }
+            ]
+        }
+    ];
+    const emoji = getEmoji(subjects);
+    
+    expect(await eta.renderFile('mail', {
+        preheader: `Auf Kaschuso sind für ${subjects.map(x => x.name).join(', ')} neue Noten verfügbar${emoji}`,
+        pages: {
+            main: 'grades'
+        },
+        env: {
             kaschuso: 'https://kaschuso.so.ch/',
             gyros: 'http://localhost/',
             colors: {
@@ -63,40 +99,27 @@ test('render grade notification html', async () => {
                 good: '#06D6A0'
             }
         },
-        {
+        user: {
             mandator: 'school'
-        },
-        [
-            {
-                name: 'Deutsch',
-                average: 3.5,
-                grades: [
-                    {
-                        name: 'Schachnovelle',
-                        value: 4,
-                        average: 4.5
-                    },
-                    {
-                        name: 'Mein Kampf',
-                        value: 3,
-                        average: 4.6
-                    }
-                ]
-            },
-            
-            {
-                name: 'Mathematik',
-                average: 5.5,
-                grades: [
-                    {
-                        name: 'Lineare Gleichungssysteme',
-                        value: 6,
-                        average: 4.3
-                    }
-                ]
-            }
-        ]
-    );
+        }, 
+        subjects: subjects,
+        emoji: emoji
+    })).toEqual(fs.readFileSync('./views/__test__/grades-mail.html', 'utf8'));
+});
 
-    expect(html).toEqual(fs.readFileSync('./__test__/grades.html', 'utf8'));
+test('render welcome notification html', async () => {
+    expect(await eta.renderFile('mail', {
+        preheader: 'Kaschuso Benachrichtigungen sind aktiviert🎉',
+        pages: {
+            main: 'welcome'
+        },
+        env: {
+            kaschuso: 'https://kaschuso.so.ch/',
+            gyros: 'http://localhost/',
+        },
+        user: {
+            mandator: 'school',
+            name: 'Erika Mustermann'
+        },
+    })).toEqual(fs.readFileSync('./views/__test__/welcome-mail.html', 'utf8'));
 });
