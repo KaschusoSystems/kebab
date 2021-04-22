@@ -1,7 +1,7 @@
 {
   "name": "kaschusosystems-kebab",
   "version": "1.0.0",
-  "description": "conduit on node",
+  "description": "Backend application for the notification service",
   "main": "app.js",
   "scripts": {
     "start": "node ./app.js",
