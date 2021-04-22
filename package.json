@@ -9,6 +9,10 @@
     "test": "jest",
     "stop": "lsof -ti :3000 | xargs kill"
   },
+  "jest": {
+    "testEnvironment": "node",
+    "verbose": true
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/KaschusoSystems/kebab.git"

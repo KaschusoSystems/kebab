@@ -21,7 +21,7 @@ SubjectSchema.methods.toJSONFor = function () {
     class: this.class,
     name: this.name,
     average: this.average,
-    grades: this.grades.map(x => x.toJSONFor()),
+    grades: this.grades.map(x => x.toJSONFor()).toObject(),
   };
 };
 
