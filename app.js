@@ -39,7 +39,7 @@ eta.configure({
   
 
 // Database connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017');
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017', { useNewUrlParser: true });
 if (!isProduction) {
   mongoose.set('debug', true);
 }
