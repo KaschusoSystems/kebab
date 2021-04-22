@@ -1,5 +1,4 @@
 const axios = require('axios');
-const crypter = require('./crypter');
 
 const KASCHUSO_API_BASE_URI = process.env.KASCHUSO_API_URI || 'http://localhost:3001/api';
 
