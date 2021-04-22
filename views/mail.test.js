@@ -37,7 +37,7 @@ test('render mail (no main page defined)', async () => {
         user: {
             mandator: 'school',
         },
-    })).rejects.toThrow('The "path" argument must be of type string. Received type undefined');
+    })).rejects.toThrow(TypeError);
 });
 
 test('render mail (custom header, main and footer)', async () => {
