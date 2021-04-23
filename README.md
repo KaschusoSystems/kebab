@@ -1,6 +1,5 @@
 # kebab
 
-[![Docker](https://github.com/KaschusoSystems/kebab/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/KaschusoSystems/kebab/actions/workflows/docker-publish.yml)
-[![Node.js CI](https://github.com/KaschusoSystems/kebab/actions/workflows/node.js.yml/badge.svg)](https://github.com/KaschusoSystems/kebab/actions/workflows/node.js.yml)
+[![pipeline status](https://gitlab.com/kaschusosystems/kebab/badges/master/pipeline.svg)](https://gitlab.com/kaschusosystems/kebab/-/commits/master)
 
 Backend application for the notification service
