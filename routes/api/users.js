@@ -17,6 +17,9 @@ router.put('/user', auth.required, function (req, res, next) {
     if (typeof req.body.gradeNotifications !== 'undefined') {
       user.gradeNotifications = req.body.gradeNotifications;
     }
+    if (typeof req.body.absenceNotifications !== 'undefined') {
+      user.absenceNotifications = req.body.absenceNotifications;
+    }
     if (typeof req.body.absenceReminders !== 'undefined') {
       user.absenceReminders = req.body.absenceReminders;
     }

@@ -1,6 +1,6 @@
 require('../models/User');
 
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 var Subject = mongoose.model('Subject');
 var User = mongoose.model('User');
 
@@ -11,7 +11,7 @@ const {
     updateSubjects,
     findByGrade,
     findBySubject,
-} = require('./notification');
+} = require('./grade-notification');
 
 test('get changed grades (no grades changed)', () => {
     const grades = [

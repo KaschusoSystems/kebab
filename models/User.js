@@ -1,8 +1,10 @@
 require('./Subject');
+require('./Absence');
 require('./Credential');
 
 var mongoose = require('mongoose');
 var Subject = mongoose.model('Subject');
+var Absence = mongoose.model('Absence');
 var Credential = mongoose.model('Credential');
 
 var uniqueValidator = require('mongoose-unique-validator');
@@ -16,6 +18,7 @@ var UserSchema = new mongoose.Schema({
   mandator: { type: String, required: [true, "can't be blank"], index: true },
   email: String,
   gradeNotifications: Boolean,
+  absenceNotifications: Boolean,
   absenceReminders: Boolean,
   monthlySummary: Boolean,
   webhookUri: String
@@ -27,6 +30,12 @@ UserSchema.methods.addSubject = function (subject) {
   const subjectModel = new Subject(subject);
   subjectModel.user = this;
   return subjectModel;
+}
+
+UserSchema.methods.addAbsence = function (absence) {
+  const absenceModel = new Absence(absence);
+  absenceModel.user = this;
+  return absenceModel;
 }
 
 UserSchema.methods.generateJWT = function () {
@@ -57,6 +66,7 @@ UserSchema.methods.toProfileJSONFor = function () {
     mandator: this.mandator,
     email: this.email,
     gradeNotifications: this.gradeNotifications,
+    absenceNotifications: this.absenceNotifications,
     absenceReminders: this.absenceReminders,
     monthlySummary: this.monthlySummary,
     webhookUri: this.webhookUri

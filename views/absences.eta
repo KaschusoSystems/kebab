@@ -1,0 +1,93 @@
+<!-- START COMPONENT: FEATURE 1 -->
+                            <table cellspacing="0" cellpadding="0" border="0" role="presentation" class="component feature-1" style="width: 100%; border-collapse: collapse;">
+                              <tr>
+                                <td style="padding: 30px 35px 15px; background-color: rgb(255, 255, 255); border-radius: 5px;">
+                                  <table cellpadding="0" cellspacing="0" role="presentation" border="0" style="white-space: normal; border-collapse: collapse; width: 100%;">
+                                    <tbody>
+                                      <tr>
+                                        <td align="center">
+                                          <p style="color: rgb(0, 0, 0); font-family: Arial, Helvetica, sans-serif; font-size: 16px;"><span style="font-size: 32px; line-height: 1.2;"><strong>Neue Absenzen🔔</strong></span></p>
+                                          <!--[if gte mso 12]><p style="font-size: 0px; line-height: 0px; mso-line-height-rule:exactly;">&nbsp;</p><![endif]-->
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                  <table cellpadding="0" cellspacing="0" border="0" role="presentation" style="width: 100%; border-collapse: collapse;">
+                                    <tbody>
+                                      <tr>
+                                        <td height="20" style="font-size: 1px; line-height: 1px;">
+                                          &nbsp;
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                  <table cellpadding="0" cellspacing="0" border="0" role="presentation" class="wrapper wrapper__row" style="width: 100%;">
+                                    <tbody>
+                                      <tr>
+                                        <td>
+                                          <!--[if (gte mso 9)|(IE)]><table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" role="presentation"><tr><td valign="top" align="center" width="50%"><![endif]-->
+                                          <% let count = 0; it.absences.forEach(function(absence){ %>
+                                            <%~ includeFile("absence", { absence: absence, colors: it.env.colors }) %>
+
+                                            <% if((++count % 2) === 0 && count !== 0) { %>
+                                                      <!--[if (gte mso 9)|(IE)]></td></tr></table><![endif]-->
+                                                    </td>
+                                                  </tr>
+                                                </tbody>
+                                              </table>
+                                              <table cellpadding="0" cellspacing="0" border="0" role="presentation" class="wrapper wrapper__row" style="width: 100%;">
+                                                <tbody>
+                                                  <tr>
+                                                    <td>
+                                                      <!--[if (gte mso 9)|(IE)]><table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" role="presentation"><tr><td valign="top" align="center" width="50%"><![endif]-->
+                                            <% }  %>
+                                          <% }) %>
+                                          <!--[if (gte mso 9)|(IE)]></td></tr></table><![endif]-->
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                  <table cellpadding="0" cellspacing="0" border="0" role="presentation" class="wrapper" style="width: 100%;">
+                                    <tbody>
+                                      <tr>
+                                        <td align="center">
+                                          <table cellpadding="0" cellspacing="0" border="0" role="presentation" style="width: 100%; border-collapse: collapse;">
+                                            <tbody>
+                                              <tr>
+                                                <td height="30" style="font-size: 1px; line-height: 1px;">
+                                                  &nbsp;
+                                                </td>
+                                              </tr>
+                                            </tbody>
+                                          </table>
+                                          <table cellpadding="0" cellspacing="0" border="0" role="presentation" class="wrapper" style="display: inline-table;">
+                                            <tbody>
+                                              <tr>
+                                                <td valign="top" style="padding: 5px;">
+                                                  <table cellpadding="0" cellspacing="0" role="presentation" class="button" style="position: relative; display: inline-table;">
+                                                    <tbody>
+                                                      <tr>
+                                                        <td style="background-color: #06d6a0; border-radius: 3px; font-size: 14px; font-weight: 600; padding: 14px 20px; color: rgb(255, 255, 255);"><a href="<%= it.env.kaschuso + it.user.mandator %>" style="text-decoration: none; line-height: 16px;" draggable="false"><span style="font-size: 14px; font-family: Arial, Helvetica, sans-serif; color: rgb(255, 255, 255);">Absenzgrund hier eintragen 👀</span></a></td>
+                                                      </tr>
+                                                    </tbody>
+                                                  </table>
+                                                </td>
+                                              </tr>
+                                            </tbody>
+                                          </table>
+                                          <table cellpadding="0" cellspacing="0" border="0" role="presentation" style="width: 100%; border-collapse: collapse;">
+                                            <tbody>
+                                              <tr>
+                                                <td height="10" style="font-size: 1px; line-height: 1px;">
+                                                  &nbsp;
+                                                </td>
+                                              </tr>
+                                            </tbody>
+                                          </table>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </td>
+                              </tr>
+                            </table><!-- END COMPONENT: FEATURE 1 -->

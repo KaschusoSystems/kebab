@@ -48,7 +48,8 @@ require('./models/User');
 
 require('./config/passport');
 require('./services/gmail');
-require('./services/notification');
+require('./services/grade-notification');
+require('./services/absence-notification');
 
 require('./services/reminder');
 

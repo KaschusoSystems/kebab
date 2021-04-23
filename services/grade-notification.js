@@ -35,7 +35,7 @@ async function processGradeNotifications() {
             }
         }));
     } catch (error) {
-        console.log('Error during notifications processing: ' + error);
+        console.log('Error during grade notification processing: ' + error);
         throw error;
     }
 }
