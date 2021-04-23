@@ -6,9 +6,9 @@ unit_tests:
   image: node:14
   stage: test
   script:
-      - NODE_ENV=development
-      - yarn install --frozen-lockfile --check-files
-      - yarn test
+    - NODE_ENV=development
+    - yarn install --frozen-lockfile --check-files
+    - yarn test
 
 docker_image_build_release:
   image:
@@ -16,7 +16,7 @@ docker_image_build_release:
     entrypoint: [""]
   stage: docker
   only:
-    - tags
+    - master
   script:
     - mkdir -p /kaniko/.docker
     - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
