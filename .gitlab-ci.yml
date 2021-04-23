@@ -24,7 +24,7 @@ test:
   stage: test
   script:
     - docker pull $TEST_IMAGE
-    - docker run $TEST_IMAGE ./run_tests.sh
+    - docker run $TEST_IMAGE yarn add global jest && yarn jest
 
 release:
   stage: release
