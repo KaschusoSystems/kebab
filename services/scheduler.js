@@ -2,7 +2,7 @@ const cron = require('node-cron');
 
 const { processGradeNotifications } = require('./grade-notification');
 const { processAbsenceNotifications } = require('./absence-notification');
-const { processAbsenceReminders   } = require('./reminder');
+const { processAbsenceReminders } = require('./absence-reminder');
 
 // do not send notifications when running tests
 if (process.env.NODE_ENV !== 'test') {
