@@ -5,7 +5,6 @@ const etaEnv = require('../config').etaEnv;
 
 const gmailTransporter = createTransporter();
 const MAIL_SENDER = `"Kaschuso Benachrichtigungen 📢" <${process.env.GMAIL_USERNAME}>`;
-const MAIL_SUBJECT = 'Auf Kaschuso sind neue Noten verfügbar ❗';
 
 function createTransporter() {
     return nodemailer.createTransport({
@@ -57,7 +56,7 @@ async function sendGradeNotification(user, subjects) {
     try {
         const emoji = getEmoji(subjects);
         const html = await eta.renderFile('mail', {
-            preheader: `Auf Kaschuso sind für ${subjects.map(x => x.name).join(', ')} neue Noten verfügbar${emoji}`,
+            preheader: `Auf Kaschuso sind für ${subjects.map(x => x.name).join(', ')} neue Noten verfügbar ${emoji}`,
             pages: {
                 main: 'grades'
             },
@@ -66,7 +65,7 @@ async function sendGradeNotification(user, subjects) {
             subjects: subjects,
             emoji: emoji
         });
-        await gmailTransporter.sendMail(await getMail(user.email, MAIL_SUBJECT, html));
+        await gmailTransporter.sendMail(await getMail(user.email, 'Auf Kaschuso sind neue Noten verfügbar ❗', html));
         console.log('Grade Notification sent');
     } catch (e) {
         console.log(e);
@@ -76,7 +75,7 @@ async function sendGradeNotification(user, subjects) {
 async function sendAbsenceNotification(user, absences) {
     try {
         const html = await eta.renderFile('mail', {
-            preheader: 'Auf Kaschuso sind neue Absenzen eingetragen🔔',
+            preheader: 'Auf Kaschuso sind neue Absenzen verfügbar 🔔',
             pages: {
                 main: 'absences'
             },
@@ -84,7 +83,7 @@ async function sendAbsenceNotification(user, absences) {
             user: user, 
             absences: absences
         });
-        await gmailTransporter.sendMail(await getMail(user.email, MAIL_SUBJECT, html));
+        await gmailTransporter.sendMail(await getMail(user.email, 'Auf Kaschuso sind neue Absenzen verfügbar 🔔', html));
         console.log('Absence Notification sent');
     } catch (e) {
         console.log(e);
