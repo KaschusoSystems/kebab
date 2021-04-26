@@ -1,13 +1,10 @@
 require('dotenv').config();
 
-const http = require('http'),
-  path = require('path'),
-  methods = require('methods'),
+const path = require('path'),
   express = require('express'),
   bodyParser = require('body-parser'),
   session = require('express-session'),
   cors = require('cors'),
-  passport = require('passport'),
   errorhandler = require('errorhandler'),
   mongoose = require('mongoose'),
   secret = require('./config').secret,
@@ -36,7 +33,6 @@ eta.configure({
   // In the /views directory
   views: path.join(__dirname, 'views')
 });
-  
 
 // Database connection
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017', { useNewUrlParser: true });
@@ -45,14 +41,7 @@ if (!isProduction) {
 }
 
 require('./models/User');
-
 require('./config/passport');
-require('./services/gmail');
-require('./services/grade-notification');
-require('./services/absence-notification');
-
-require('./services/absence-reminder');
-
 require('./services/scheduler');
 
 app.use(require('./routes'));
