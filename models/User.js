@@ -21,7 +21,7 @@ var UserSchema = new mongoose.Schema({
   absenceNotifications: Boolean,
   absenceReminders: Boolean,
   monthlySummary: Boolean,
-  webhookUri: String
+  iftttWebhookKey: String
 }, { timestamps: true });
 
 UserSchema.plugin(uniqueValidator, { message: 'is already taken.' });
@@ -69,7 +69,7 @@ UserSchema.methods.toProfileJSONFor = function () {
     absenceNotifications: this.absenceNotifications,
     absenceReminders: this.absenceReminders,
     monthlySummary: this.monthlySummary,
-    webhookUri: this.webhookUri
+    iftttWebhookKey: this.iftttWebhookKey
   };
 };
 

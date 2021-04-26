@@ -26,8 +26,8 @@ router.put('/user', auth.required, function (req, res, next) {
     if (typeof req.body.monthlySummary !== 'undefined') {
       user.monthlySummary = req.body.monthlySummary;
     }
-    if (typeof req.body.webhookUri !== 'undefined') {
-      user.webhookUri = req.body.webhookUri;
+    if (typeof req.body.iftttWebhookKey !== 'undefined') {
+      user.iftttWebhookKey = req.body.iftttWebhookKey;
     }
 
     return user.save().then(function () {

@@ -51,7 +51,7 @@ require('./services/gmail');
 require('./services/grade-notification');
 require('./services/absence-notification');
 
-require('./services/reminder');
+require('./services/absence-reminder');
 
 require('./services/scheduler');
 

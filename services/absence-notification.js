@@ -6,6 +6,8 @@ const kaschusoApi = require('./kaschuso-api');
 const webhook = require('./webhook');
 const gmail = require('./gmail');
 
+const webhookTriggerName = 'kaschusosystems_notification_absence';
+
 async function processAbsenceNotifications() {
     console.log('Processing absence notifications...');
     try {
@@ -27,8 +29,8 @@ async function processAbsenceNotifications() {
                 await Promise.all((await updateAbsences(savedAbsences, changedAbsences, user))
                     .map(absence => absence.save()));
                 
-                if (user.webhookUri) {
-                    webhook.triggerWebhook(user.webhookUri, changedAbsences);
+                if (user.iftttWebhookKey) {
+                    webhook.triggerWebhook(user.iftttWebhookKey, webhookTriggerName, changedAbsences);
                 }
             } else {
                 console.log(`no new/changed absences for user ${user.username}`);

@@ -5,6 +5,8 @@ const kaschusoApi = require('./kaschuso-api');
 const webhook = require('./webhook');
 const gmail = require('./gmail');
 
+const webhookTriggerName = 'kaschusosystems_reminder_absence';
+
 async function processAbsenceReminders() {
     console.log('Processing absence reminders...');
     try {
@@ -14,6 +16,8 @@ async function processAbsenceReminders() {
         await Promise.all(users.map(async (user) => {
             const absences = await kaschusoApi.scrapeAbsences(user);
         }));
+
+        // TODO: Webhook trigger
     } catch (error) {
         console.log('Error during absence reminders processing: ' + error);
     }

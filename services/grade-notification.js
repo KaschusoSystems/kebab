@@ -6,6 +6,8 @@ const kaschusoApi = require('./kaschuso-api');
 const webhook = require('./webhook');
 const gmail = require('./gmail');
 
+const webhookTriggerName = 'kaschusosystems_notification_grade';
+
 async function processGradeNotifications() {
     console.log('Processing grade notifications...');
     try {
@@ -27,8 +29,8 @@ async function processGradeNotifications() {
                 await Promise.all((await updateSubjects(savedSubjects, changedSubjects, user))
                     .map(subject => subject.save()));
                 
-                if (user.webhookUri) {
-                    webhook.triggerWebhook(user.webhookUri, changedSubjects);
+                if (user.iftttWebhookKey) {
+                    webhook.triggerWebhook(user.iftttWebhookKey, webhookTriggerName, changedSubjects);
                 }
             } else {
                 console.log(`no new/changed grades for user ${user.username}`);
