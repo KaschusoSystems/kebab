@@ -126,6 +126,7 @@ test('render absence notification html', async () => {
     ];
     expect(await eta.renderFile('mail', {
         preheader: 'Auf Kaschuso sind neue Absenzen eingetragen🔔',
+        title: 'Neue Absenzen🔔',
         pages: {
             main: 'absences'
         },
@@ -161,4 +162,43 @@ test('render welcome notification html', async () => {
             name: 'Erika Mustermann'
         },
     })).toEqual(fs.readFileSync('./views/__test__/welcome-mail.html', 'utf8'));
+});
+
+test('render absence reminder html', async () => {
+    const absences = [
+        {
+            date: '30.03.2021',
+            time: '13:00 - 13:45',
+            class: 'M403-INF17A,INF17B-FURR	',
+            status: 'offen',
+            comment: 'Krank'
+        },
+        {
+            date: '30.03.2021',
+            time: '13:50 - 14:35',
+            class: 'M403-INF17A,INF17B-FURR	',
+            status: 'offen',
+        }
+    ];
+    expect(await eta.renderFile('mail', {
+        preheader: 'Auf Kaschuso sind neue Absenzen eingetragen🔔',
+        title: 'Offene Absenzen ohne Grund🔔',
+        pages: {
+            main: 'absences'
+        },
+        env: {
+            kaschuso: 'https://kaschuso.so.ch/',
+            gyros: 'http://localhost/',
+            colors: {
+                'Unentschuldigt': '#EF476F',
+                'Entschuldigt': '#06D6A0',
+                'Nicht zählend': '#06D6A0',
+                'offen': '#FFD166'
+            }
+        },
+        user: {
+            mandator: 'school'
+        },
+        absences: absences
+    })).toEqual(fs.readFileSync('./views/__test__/absence-reminder-mail.html', 'utf8'));
 });

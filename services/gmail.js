@@ -76,6 +76,7 @@ async function sendAbsenceNotification(user, absences) {
     try {
         const html = await eta.renderFile('mail', {
             preheader: 'Auf Kaschuso sind neue Absenzen verfügbar 🔔',
+            title: 'Neue Absenzen🔔',
             pages: {
                 main: 'absences'
             },
@@ -107,8 +108,23 @@ async function sendWelcomeMail(user) {
     }
 }
 
-// TODO: Absence reminders
 async function sendAbsenceReminder(user, absences) {
+    try {
+        const html = await eta.renderFile('mail', {
+            preheader: 'Auf Kaschuso sind noch offene Absenzen ohne Grund eingetragen 🔔',
+            title: 'Offene Absenzen ohne Grund🔔',
+            pages: {
+                main: 'absences'
+            },
+            env: etaEnv,
+            user: user, 
+            absences: absences
+        });
+        await gmailTransporter.sendMail(await getMail(user.email, 'Auf Kaschuso sind noch offene Absenzen ohne Grund eingetragen 🔔', html));
+        console.log('Absence Reminder sent');
+    } catch (e) {
+        console.log(e);
+    }
 
 }
 
