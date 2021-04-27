@@ -2,7 +2,6 @@ var mongoose = require('mongoose');
 var User = mongoose.model('User');
 var Absence = mongoose.model('Absence');
 
-const kaschusoApi = require('./kaschuso-api');
 const webhook = require('./webhook');
 const gmail = require('./gmail');
 
