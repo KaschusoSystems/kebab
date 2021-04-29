@@ -9,9 +9,12 @@ if (process.env.NODE_ENV !== 'test') {
     // initial call
     processGradeNotifications();
     processAbsenceNotifications();
+    processAbsenceReminders();
 
     // default: Every minute
-    cron.schedule(process.env.GRADE_NOTIFICATION_CRON_STRING || '* * * * *', processGradeNotifications);
+    cron.schedule(process.env.GRADE_NOTIFICATION_CRON_STRING   || '* * * * *', processGradeNotifications);
     // default: Every day at midnight
     cron.schedule(process.env.ABSENCE_NOTIFICATION_CRON_STRING || '0 0 * * *', processAbsenceNotifications);
+    // default: Every day at midnight
+    cron.schedule(process.env.ABSENCE_REMINDER_CRON_STRING     || '0 0 * * *', processAbsenceReminders);
 }

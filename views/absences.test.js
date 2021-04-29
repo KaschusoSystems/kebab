@@ -10,6 +10,7 @@ beforeAll(async () => {
 
 test('render absences', async () => {
     expect(await eta.renderFile('absences', {
+        title: 'Neue Absenzen🔔',
         env: {
             kaschuso: 'https://kaschuso.so.ch/',
             gyros: 'http://localhost/',
