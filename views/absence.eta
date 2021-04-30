@@ -6,8 +6,8 @@
                                                         <tbody>
                                                           <tr>
                                                             <td align="center">
-                                                              <p style="color: rgb(0, 0, 0); font-family: Arial, Helvetica, sans-serif; font-size: 16px;"><span style="color: <%= it.colors[it.absence.status] %>"><span style="font-size: 24px; line-height: 1.2;"><strong><%= it.absence.date %><br><%= it.absence.time %></strong></span></span></p>
-                                                              <p style="color: rgb(0, 0, 0); font-family: Arial, Helvetica, sans-serif; font-size: 16px; line-height: 1.5em;"><span style="color: rgb(170, 170, 170)"><span style="font-size: 14px; line-height: 1.5em;"><%= it.absence.class %><br><%= it.absence.status ? `Status: ${it.absence.status}` : '' %><br> <%= it.absence.comment ? `Kommentar: ${it.absence.comment}` : '' %></span></span></p>
+                                                              <p style="color: rgb(0, 0, 0); font-family: Inter, Arial, Helvetica, sans-serif; font-size: 16px;"><span style="color: <%= it.colors[it.absence.status] %>"><span style="font-size: 24px; line-height: 1.2;"><strong><%= it.absence.date %><br><%= it.absence.time %></strong></span></span></p>
+                                                              <p style="color: rgb(0, 0, 0); font-family: Inter, Arial, Helvetica, sans-serif; font-size: 16px; line-height: 1.5em;"><span style="color: rgb(170, 170, 170)"><span style="font-size: 14px; line-height: 1.5em;"><%= it.absence.class %><br><%= it.absence.status ? `Status: ${it.absence.status}` : '' %><br> <%= it.absence.comment ? `Kommentar: ${it.absence.comment}` : '' %></span></span></p>
                                                               <!--[if gte mso 12]><p style="font-size: 0px; line-height: 0px; mso-line-height-rule:exactly;">&nbsp;</p><![endif]-->
                                                             </td>
                                                           </tr>
