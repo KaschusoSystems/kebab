@@ -26,8 +26,8 @@
                                       <tr>
                                         <td>
                                           <!--[if (gte mso 9)|(IE)]><table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" role="presentation"><tr><td valign="top" align="center" width="50%"><![endif]-->
-                                          <% let count = 0; it.absences.forEach(function(absence){ %>
-                                            <%~ includeFile("absence", { absence: absence, colors: it.env.colors }) %>
+                                          <% let count = 0, singleGrade = it.absences.length === 1; it.absences.forEach(function(absence){ %>
+                                            <%~ includeFile("absence", { absence: absence, colors: it.env.colors, singleGrade: singleGrade }) %>
 
                                             <% if((++count % 2) === 0 && count !== 0) { %>
                                                       <!--[if (gte mso 9)|(IE)]></td></tr></table><![endif]-->

@@ -1,4 +1,4 @@
-<table cellpadding="0" cellspacing="0" border="0" role="presentation" class="wrapper xs-col mso-col-100 sm-col-50" style="float: left;">
+<table cellpadding="0" cellspacing="0" border="0" role="presentation" class="wrapper xs-col mso-col-100 <%= it.singleGrade ? 'sm-col-100' : 'sm-col-50' %>" style="float: left;">
                                                 <tbody>
                                                   <tr>
                                                     <td class="sm-center" style="padding: 0px 10px;">

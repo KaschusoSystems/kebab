@@ -26,9 +26,9 @@
                                       <tr>
                                         <td>
                                           <!--[if (gte mso 9)|(IE)]><table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" role="presentation"><tr><td valign="top" align="center" width="50%"><![endif]-->
-                                          <% let count = 0; it.subjects.forEach(function(subject){ %>
+                                          <% let count = 0, singleGrade = it.subjects.map(x => x.grades.length).reduce((x, y) => x + y) === 1; it.subjects.forEach(function(subject){ %>
                                             <% subject.grades.forEach(function(grade){ %>
-                                              <%~ includeFile("grade", { subject: subject, grade: grade, colors: it.env.colors }) %>
+                                              <%~ includeFile("grade", { subject: subject, grade: grade, colors: it.env.colors, singleGrade: singleGrade }) %>
 
                                               <% if((++count % 2) === 0 && count !== 0) { %>
                                                         <!--[if (gte mso 9)|(IE)]></td></tr></table><![endif]-->
