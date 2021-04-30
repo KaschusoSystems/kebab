@@ -1,4 +1,4 @@
-<table cellpadding="0" cellspacing="0" border="0" role="presentation" class="wrapper xs-col mso-col-100 sm-col-50" style="float: left;">
+<table cellpadding="0" cellspacing="0" border="0" role="presentation" class="wrapper xs-col mso-col-100 <%= it.singleGrade ? 'sm-col-100' : 'sm-col-50' %>" style="float: left;">
                                                 <tbody>
                                                   <tr>
                                                     <td class="sm-center" style="padding: 0px 10px;">
@@ -6,9 +6,9 @@
                                                         <tbody>
                                                           <tr>
                                                             <td align="center">
-                                                              <p style="color: rgb(0, 0, 0); font-family: Arial, Helvetica, sans-serif; font-size: 16px; line-height: 1.5em;"><span style="color: <%= it.grade.value < 4 ? it.colors.insufficient : it.grade.value < 5 ? it.colors.sufficient : it.colors.good %>"><span style="font-size: 64px; line-height: 1.2;"><strong><%= it.grade.value %></strong></span></span></p>
-                                                              <p style="color: rgb(0, 0, 0); font-family: Arial, Helvetica, sans-serif; font-size: 16px;"><span style="font-size: 24px; line-height: 1.2;"><strong><%= it.subject.name %></strong></span></p>
-                                                              <p style="color: rgb(0, 0, 0); font-family: Arial, Helvetica, sans-serif; font-size: 16px; line-height: 1.5em;"><span style="color: rgb(170, 170, 170)"><span style="font-size: 14px; line-height: 1.5em;"><%= it.grade.name %><br>Klassendurchschnitt: <%= it.grade.average %><br>Fachdurchschnitt: <%= it.subject.average %></span></span></p>
+                                                              <p style="color: rgb(0, 0, 0); font-family: Inter, Arial, Helvetica, sans-serif; font-size: 16px; line-height: 1.5em;"><span style="color: <%= it.grade.value < 4 ? it.colors.insufficient : it.grade.value < 5 ? it.colors.sufficient : it.colors.good %>"><span style="font-size: 64px; line-height: 1.2;"><strong><%= it.grade.value %></strong></span></span></p>
+                                                              <p style="color: rgb(0, 0, 0); font-family: Inter, Arial, Helvetica, sans-serif; font-size: 16px;"><span style="font-size: 24px; line-height: 1.2;"><strong><%= it.subject.name %></strong></span></p>
+                                                              <p style="color: rgb(0, 0, 0); font-family: Inter, Arial, Helvetica, sans-serif; font-size: 16px; line-height: 1.5em;"><span style="color: rgb(170, 170, 170)"><span style="font-size: 14px; line-height: 1.5em;"><%= it.grade.name %><br>Klassendurchschnitt: <%= it.grade.average %><br>Fachdurchschnitt: <%= it.subject.average %></span></span></p>
                                                               <!--[if gte mso 12]><p style="font-size: 0px; line-height: 0px; mso-line-height-rule:exactly;">&nbsp;</p><![endif]-->
                                                             </td>
                                                           </tr>

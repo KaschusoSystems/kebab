@@ -11,6 +11,9 @@
     <meta name="x-apple-disable-message-reformatting">
     <title></title>
     <style>
+      @import url('https://rsms.me/inter/inter.css');
+      html { font-family: 'Inter', sans-serif; }
+
       body {
         margin: 0;
         padding: 0;
@@ -117,6 +120,10 @@
 
       .sm-col-50 {
         width: 50%;
+      }
+
+      .sm-col-100 {
+        width: 100%;
       }
 
       @media screen and (max-width:620px) {
