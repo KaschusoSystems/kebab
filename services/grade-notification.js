@@ -30,7 +30,7 @@ async function processGradeNotifications() {
                     .map(subject => subject.save()));
                 
                 if (user.iftttWebhookKey) {
-                    webhook.triggerWebhook(user.iftttWebhookKey, webhookTriggerName, changedSubjects);
+                    webhook.triggerWebhook(user, webhookTriggerName, changedSubjects);
                 }
             } else {
                 console.log(`no new/changed grades for user ${user.username}`);

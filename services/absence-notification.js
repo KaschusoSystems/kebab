@@ -30,7 +30,7 @@ async function processAbsenceNotifications() {
                     .map(absence => absence.save()));
                 
                 if (user.iftttWebhookKey) {
-                    webhook.triggerWebhook(user.iftttWebhookKey, webhookTriggerName, changedAbsences);
+                    webhook.triggerWebhook(user, webhookTriggerName, changedAbsences);
                 }
             } else {
                 console.log(`no new/changed absences for user ${user.username}`);
