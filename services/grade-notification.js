@@ -10,11 +10,12 @@ const webhookTriggerName = 'kaschusosystems_notification_grade';
 
 async function processGradeNotifications() {
     console.log('Processing grade notifications...');
-    try {
-        const users = await User.find({ gradeNotifications: true });
-        console.log(`${users.length} users found for grade notifications`);
+    
+    const users = await User.find({ gradeNotifications: true });
+    console.log(`${users.length} users found for grade notifications`);
 
-        await Promise.all(users.map(async (user) => {
+    await Promise.all(users.map(async (user) => {
+        try {
             const newSubjects = await kaschusoApi.scrapeGrades(user);
             const savedSubjects = await Subject.find({'user': user.id});
             
@@ -35,11 +36,10 @@ async function processGradeNotifications() {
             } else {
                 console.log(`no new/changed grades for user ${user.username}`);
             }
-        }));
-    } catch (error) {
-        console.log('Error during grade notification processing: ' + error);
-        throw error;
-    }
+        } catch (err) {
+            console.error(`error during grade notification processing for user ${user.username}: ${err}`);
+        }
+    }));
 }
 
 /**

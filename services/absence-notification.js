@@ -15,29 +15,33 @@ async function processAbsenceNotifications() {
         console.log(`${users.length} users found for absence notifications`);
 
         await Promise.all(users.map(async (user) => {
-            const newAbsences = await kaschusoApi.scrapeAbsences(user);
-            const savedAbsences = await Absence.find({'user': user.id});
-            
-            const changedAbsences= await getChangedAbsences(Object.assign(savedAbsences, {}), newAbsences);
-            const hasChanges = changedAbsences.length !== 0;
-
-            if (hasChanges) {
-                console.log(`${changedAbsences.length} new/changed absence(s) for user ${user.username}`);
-                await gmail.sendAbsenceNotification(user, changedAbsences);
+            try {
+                const newAbsences = await kaschusoApi.scrapeAbsences(user);
+                const savedAbsences = await Absence.find({'user': user.id});
                 
-                // Only update db if changes detected
-                await Promise.all((await updateAbsences(savedAbsences, changedAbsences, user))
-                    .map(absence => absence.save()));
-                
-                if (user.iftttWebhookKey) {
-                    webhook.triggerWebhook(user.iftttWebhookKey, webhookTriggerName, changedAbsences);
+                const changedAbsences= await getChangedAbsences(Object.assign(savedAbsences, {}), newAbsences);
+                const hasChanges = changedAbsences.length !== 0;
+    
+                if (hasChanges) {
+                    console.log(`${changedAbsences.length} new/changed absence(s) for user ${user.username}`);
+                    await gmail.sendAbsenceNotification(user, changedAbsences);
+                    
+                    // Only update db if changes detected
+                    await Promise.all((await updateAbsences(savedAbsences, changedAbsences, user))
+                        .map(absence => absence.save()));
+                    
+                    if (user.iftttWebhookKey) {
+                        webhook.triggerWebhook(user.iftttWebhookKey, webhookTriggerName, changedAbsences);
+                    }
+                } else {
+                    console.log(`no new/changed absences for user ${user.username}`);
                 }
-            } else {
-                console.log(`no new/changed absences for user ${user.username}`);
+            } catch (err) {
+                console.error(`error during absence reminder processing for user ${user.username}: ${err}`);
             }
         }));
     } catch (error) {
-        console.log('Error during absence notification processing: ' + error);
+        console.error('Error during absence notification processing: ' + error);
         throw error;
     }
 }
