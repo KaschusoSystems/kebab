@@ -19,19 +19,19 @@ async function processAbsenceNotifications() {
                 const newAbsences = await kaschusoApi.scrapeAbsences(user);
                 const savedAbsences = await Absence.find({'user': user.id});
                 
-                const changedAbsences= await getChangedAbsences(Object.assign(savedAbsences, {}), newAbsences);
-                const hasChanges = changedAbsences.length !== 0;
-    
-                if (hasChanges) {
-                    console.log(`${changedAbsences.length} new/changed absence(s) for user ${user.username}`);
-                    await gmail.sendAbsenceNotification(user, changedAbsences);
-                    
-                    // Only update db if changes detected
+                const [changedAbsences, changedAbsencesToNotify] = await getChangedAbsences(Object.assign(savedAbsences, {}), newAbsences);
+
+                if (changedAbsences.length !== 0) {
                     await Promise.all((await updateAbsences(savedAbsences, changedAbsences, user))
                         .map(absence => absence.save()));
+                }
+    
+                if (changedAbsencesToNotify.length !== 0) {
+                    console.log(`${changedAbsencesToNotify.length} new/changed absence(s) for user ${user.username}`);
+                    await gmail.sendAbsenceNotification(user, changedAbsencesToNotify);
                     
                     if (user.iftttWebhookKey) {
-                        webhook.triggerWebhook(user.iftttWebhookKey, webhookTriggerName, changedAbsences);
+                        webhook.triggerWebhook(user.iftttWebhookKey, webhookTriggerName, changedAbsencesToNotify);
                     }
                 } else {
                     console.log(`no new/changed absences for user ${user.username}`);
@@ -60,6 +60,7 @@ async function processAbsenceNotifications() {
 
 function getChangedAbsences(absences, newAbsences) {
     const changedAbsences = [];
+    const changedAbsencesToNotify = [];
     newAbsences.map(newAbsence => {
         const absence = findByAbsence(absences, newAbsence);
         if (absence) {
@@ -71,9 +72,10 @@ function getChangedAbsences(absences, newAbsences) {
             }
         } else {
             changedAbsences.push(newAbsence);
+            changedAbsencesToNotify.push(newAbsence);
         }
     });
-    return changedAbsences;
+    return [changedAbsences, changedAbsencesToNotify];
 }
 
 function findByAbsence(absences, absence) {

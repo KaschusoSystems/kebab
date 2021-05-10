@@ -10,368 +10,388 @@ const {
     findByAbsence
 } = require('./absence-notification');
 
-test('get changed absences (no absences changed)', () => {
-    const absences = [
-        {
-            date: '30.03.2021',
-            time: '13:00 - 13:45',
-            class: 'M403-INF17A,INF17B-FURR',
-            status: 'offen',
-            comment: 'Krank'
-        },
-        {
-            date: '30.03.2021',
-            time: '13:50 - 14:35',
-            class: 'M403-INF17A,INF17B-FURR',
-            status: 'Entschuldigt',
-            comment: 'Zahnarztbesuch'
-        }
-    ];
-    const newAbsences = [
-        {
-            date: '30.03.2021',
-            time: '13:00 - 13:45',
-            class: 'M403-INF17A,INF17B-FURR',
-            status: 'offen',
-            comment: 'Krank'
-        },
-        {
-            date: '30.03.2021',
-            time: '13:50 - 14:35',
-            class: 'M403-INF17A,INF17B-FURR',
-            status: 'Entschuldigt',
-            comment: 'Zahnarztbesuch'
-        }
-    ];
-    expect(getChangedAbsences(absences, newAbsences))
-    .toEqual([]);
-});
+describe('get changed absences', () => {
+    test('no absences changed', () => {
+        const absences = [
+            {
+                date: '30.03.2021',
+                time: '13:00 - 13:45',
+                class: 'M403-INF17A,INF17B-FURR',
+                status: 'offen',
+                comment: 'Krank'
+            },
+            {
+                date: '30.03.2021',
+                time: '13:50 - 14:35',
+                class: 'M403-INF17A,INF17B-FURR',
+                status: 'Entschuldigt',
+                comment: 'Zahnarztbesuch'
+            }
+        ];
+        const newAbsences = [
+            {
+                date: '30.03.2021',
+                time: '13:00 - 13:45',
+                class: 'M403-INF17A,INF17B-FURR',
+                status: 'offen',
+                comment: 'Krank'
+            },
+            {
+                date: '30.03.2021',
+                time: '13:50 - 14:35',
+                class: 'M403-INF17A,INF17B-FURR',
+                status: 'Entschuldigt',
+                comment: 'Zahnarztbesuch'
+            }
+        ];
+        expect(getChangedAbsences(absences, newAbsences))
+        .toEqual([[], []]);
+    });
 
-test('get changed absences (status changed)', () => {
-    const absences = [
-        {
-            date: '30.03.2021',
-            time: '13:00 - 13:45',
-            class: 'M403-INF17A,INF17B-FURR',
-            status: 'offen',
-            comment: 'Krank'
-        },
-        {
-            date: '30.03.2021',
-            time: '13:50 - 14:35',
-            class: 'M403-INF17A,INF17B-FURR',
-            status: 'offen',
-            comment: 'Zahnarztbesuch',
-        }
-    ];
-    const newAbsences = [
-        {
-            date: '30.03.2021',
-            time: '13:00 - 13:45',
-            class: 'M403-INF17A,INF17B-FURR',
-            status: 'offen',
-            comment: 'Krank'
-        },
-        {
-            date: '30.03.2021',
-            time: '13:50 - 14:35',
-            class: 'M403-INF17A,INF17B-FURR',
-            status: 'Entschuldigt',
-            comment: 'Zahnarztbesuch'
-        }
-    ];
-    expect(getChangedAbsences(absences, newAbsences))
-    .toEqual([
-        {
-            date: '30.03.2021',
-            time: '13:50 - 14:35',
-            class: 'M403-INF17A,INF17B-FURR',
-            status: 'Entschuldigt',
-            comment: 'Zahnarztbesuch'
-        }
-    ]);
-});
+    test('status changed', () => {
+        const absences = [
+            {
+                date: '30.03.2021',
+                time: '13:00 - 13:45',
+                class: 'M403-INF17A,INF17B-FURR',
+                status: 'offen',
+                comment: 'Krank'
+            },
+            {
+                date: '30.03.2021',
+                time: '13:50 - 14:35',
+                class: 'M403-INF17A,INF17B-FURR',
+                status: 'offen',
+                comment: 'Zahnarztbesuch',
+            }
+        ];
+        const newAbsences = [
+            {
+                date: '30.03.2021',
+                time: '13:00 - 13:45',
+                class: 'M403-INF17A,INF17B-FURR',
+                status: 'offen',
+                comment: 'Krank'
+            },
+            {
+                date: '30.03.2021',
+                time: '13:50 - 14:35',
+                class: 'M403-INF17A,INF17B-FURR',
+                status: 'Entschuldigt',
+                comment: 'Zahnarztbesuch'
+            }
+        ];
+        expect(getChangedAbsences(absences, newAbsences))
+        .toEqual([
+            [
+                {
+                    date: '30.03.2021',
+                    time: '13:50 - 14:35',
+                    class: 'M403-INF17A,INF17B-FURR',
+                    status: 'Entschuldigt',
+                    comment: 'Zahnarztbesuch'
+                }
+            ],
+            []
+        ]);
+    });
 
-test('get changed absences (comment changed)', () => {
-    const absences = [
-        {
-            date: '30.03.2021',
-            time: '13:00 - 13:45',
-            class: 'M403-INF17A,INF17B-FURR',
-            status: 'offen',
-            comment: 'Krank'
-        },
-        {
-            date: '30.03.2021',
-            time: '13:50 - 14:35',
-            class: 'M403-INF17A,INF17B-FURR',
-            status: 'Entschuldigt',
-        }
-    ];
-    const newAbsences = [
-        {
-            date: '30.03.2021',
-            time: '13:00 - 13:45',
-            class: 'M403-INF17A,INF17B-FURR',
-            status: 'offen',
-            comment: 'Krank'
-        },
-        {
-            date: '30.03.2021',
-            time: '13:50 - 14:35',
-            class: 'M403-INF17A,INF17B-FURR',
-            status: 'Entschuldigt',
-            comment: 'Zahnarztbesuch'
-        }
-    ];
-    expect(getChangedAbsences(absences, newAbsences))
-    .toEqual([
-        {
-            date: '30.03.2021',
-            time: '13:50 - 14:35',
-            class: 'M403-INF17A,INF17B-FURR',
-            status: 'Entschuldigt',
-            comment: 'Zahnarztbesuch'
-        }
-    ]);
-});
+    test('comment changed', () => {
+        const absences = [
+            {
+                date: '30.03.2021',
+                time: '13:00 - 13:45',
+                class: 'M403-INF17A,INF17B-FURR',
+                status: 'offen',
+                comment: 'Krank'
+            },
+            {
+                date: '30.03.2021',
+                time: '13:50 - 14:35',
+                class: 'M403-INF17A,INF17B-FURR',
+                status: 'Entschuldigt',
+            }
+        ];
+        const newAbsences = [
+            {
+                date: '30.03.2021',
+                time: '13:00 - 13:45',
+                class: 'M403-INF17A,INF17B-FURR',
+                status: 'offen',
+                comment: 'Krank'
+            },
+            {
+                date: '30.03.2021',
+                time: '13:50 - 14:35',
+                class: 'M403-INF17A,INF17B-FURR',
+                status: 'Entschuldigt',
+                comment: 'Zahnarztbesuch'
+            }
+        ];
+        expect(getChangedAbsences(absences, newAbsences))
+        .toEqual([
+            [
+                {
+                    date: '30.03.2021',
+                    time: '13:50 - 14:35',
+                    class: 'M403-INF17A,INF17B-FURR',
+                    status: 'Entschuldigt',
+                    comment: 'Zahnarztbesuch'
+                }
+            ],
+            []
+        ]);
+    });
 
-test('get changed absences (reason changed)', () => {
-    const absences = [
-        {
-            date: '30.03.2021',
-            time: '13:00 - 13:45',
-            class: 'M403-INF17A,INF17B-FURR',
-            status: 'offen',
-            comment: 'Krank'
-        },
-        {
-            date: '30.03.2021',
-            time: '13:50 - 14:35',
-            class: 'M403-INF17A,INF17B-FURR',
-            status: 'Entschuldigt',
-            comment: 'Zahnarztbesuch'
-        }
-    ];
-    const newAbsences = [
-        {
-            date: '30.03.2021',
-            time: '13:00 - 13:45',
-            class: 'M403-INF17A,INF17B-FURR',
-            status: 'offen',
-            comment: 'Krank'
-        },
-        {
-            date: '30.03.2021',
-            time: '13:50 - 14:35',
-            class: 'M403-INF17A,INF17B-FURR',
-            status: 'Entschuldigt',
-            comment: 'Zahnarztbesuch',
-            reason: 'Krank'
-        }
-    ];
-    expect(getChangedAbsences(absences, newAbsences))
-    .toEqual([
-        {
-            date: '30.03.2021',
-            time: '13:50 - 14:35',
-            class: 'M403-INF17A,INF17B-FURR',
-            status: 'Entschuldigt',
-            comment: 'Zahnarztbesuch',
-            reason: 'Krank'
-        }
-    ]);
-});
+    test('reason changed', () => {
+        const absences = [
+            {
+                date: '30.03.2021',
+                time: '13:00 - 13:45',
+                class: 'M403-INF17A,INF17B-FURR',
+                status: 'offen',
+                comment: 'Krank'
+            },
+            {
+                date: '30.03.2021',
+                time: '13:50 - 14:35',
+                class: 'M403-INF17A,INF17B-FURR',
+                status: 'Entschuldigt',
+                comment: 'Zahnarztbesuch'
+            }
+        ];
+        const newAbsences = [
+            {
+                date: '30.03.2021',
+                time: '13:00 - 13:45',
+                class: 'M403-INF17A,INF17B-FURR',
+                status: 'offen',
+                comment: 'Krank'
+            },
+            {
+                date: '30.03.2021',
+                time: '13:50 - 14:35',
+                class: 'M403-INF17A,INF17B-FURR',
+                status: 'Entschuldigt',
+                comment: 'Zahnarztbesuch',
+                reason: 'Krank'
+            }
+        ];
+        expect(getChangedAbsences(absences, newAbsences))
+        .toEqual([
+            [
+                {
+                    date: '30.03.2021',
+                    time: '13:50 - 14:35',
+                    class: 'M403-INF17A,INF17B-FURR',
+                    status: 'Entschuldigt',
+                    comment: 'Zahnarztbesuch',
+                    reason: 'Krank'
+                }
+            ],
+            []
+        ]);
+    });
 
-test('get changed absences (one new absence)', () => {
-    const absences = [
-        {
-            date: '30.03.2021',
-            time: '13:00 - 13:45',
-            class: 'M403-INF17A,INF17B-FURR',
-            status: 'offen',
-            comment: 'Krank'
-        }
-    ];
-    const newAbsences = [
-        {
-            date: '30.03.2021',
-            time: '13:00 - 13:45',
-            class: 'M403-INF17A,INF17B-FURR',
-            status: 'offen',
-            comment: 'Krank'
-        },
-        {
-            date: '30.03.2021',
-            time: '13:50 - 14:35',
-            class: 'M403-INF17A,INF17B-FURR',
-            status: 'Entschuldigt',
-            comment: 'Zahnarztbesuch'
-        }
-    ];
-    expect(getChangedAbsences(absences, newAbsences))
-    .toEqual([
-        {
-            date: '30.03.2021',
-            time: '13:50 - 14:35',
-            class: 'M403-INF17A,INF17B-FURR',
-            status: 'Entschuldigt',
-            comment: 'Zahnarztbesuch'
-        }
-    ]);
-});
+    test('one new absence', () => {
+        const absences = [
+            {
+                date: '30.03.2021',
+                time: '13:00 - 13:45',
+                class: 'M403-INF17A,INF17B-FURR',
+                status: 'offen',
+                comment: 'Krank'
+            }
+        ];
+        const newAbsences = [
+            {
+                date: '30.03.2021',
+                time: '13:00 - 13:45',
+                class: 'M403-INF17A,INF17B-FURR',
+                status: 'offen',
+                comment: 'Krank'
+            },
+            {
+                date: '30.03.2021',
+                time: '13:50 - 14:35',
+                class: 'M403-INF17A,INF17B-FURR',
+                status: 'Entschuldigt',
+                comment: 'Zahnarztbesuch'
+            }
+        ];
+        expect(getChangedAbsences(absences, newAbsences))
+        .toEqual([
+            [
+                {
+                    date: '30.03.2021',
+                    time: '13:50 - 14:35',
+                    class: 'M403-INF17A,INF17B-FURR',
+                    status: 'Entschuldigt',
+                    comment: 'Zahnarztbesuch'
+                }
+            ],
+            [
+                {
+                    date: '30.03.2021',
+                    time: '13:50 - 14:35',
+                    class: 'M403-INF17A,INF17B-FURR',
+                    status: 'Entschuldigt',
+                    comment: 'Zahnarztbesuch'
+                }
+            ]
+        ]);
+    });
 
-test('get changed absences (two absences, one removed -> no changes)', () => {
-    const absences = [
-        {
-            date: '30.03.2021',
-            time: '13:00 - 13:45',
-            class: 'M403-INF17A,INF17B-FURR',
-            status: 'offen',
-            comment: 'Krank'
-        },
-        {
-            date: '30.03.2021',
-            time: '13:50 - 14:35',
-            class: 'M403-INF17A,INF17B-FURR',
-            status: 'Entschuldigt',
-            comment: 'Zahnarztbesuch'
-        }
-    ];
-    const newAbsences = [
-        {
-            date: '30.03.2021',
-            time: '13:50 - 14:35',
-            class: 'M403-INF17A,INF17B-FURR',
-            status: 'Entschuldigt',
-            comment: 'Zahnarztbesuch'
-        }
-    ];
-    expect(getChangedAbsences(absences, newAbsences))
-    .toEqual([]);
-});
-
-test('find by absence', () => {
-    const absences = [
-        {
-            date: '30.03.2021',
-            time: '13:00 - 13:45',
-            class: 'M403-INF17A,INF17B-FURR',
-            status: 'offen',
-            comment: 'Krank'
-        },
-        {
-            date: '30.03.2021',
-            time: '13:50 - 14:35',
-            class: 'M403-INF17A,INF17B-FURR',
-            status: 'Entschuldigt',
-            comment: 'Zahnarztbesuch'
-        }
-    ];
-    const absence = {
-        date: '30.03.2021',
-        time: '13:00 - 13:45',
-        class: 'M403-INF17A,INF17B-FURR',
-        status: 'offen',
-        comment: 'Krank'
-    };
-    expect(findByAbsence(absences, absence))
-    .toEqual({
-        date: '30.03.2021',
-        time: '13:00 - 13:45',
-        class: 'M403-INF17A,INF17B-FURR',
-        status: 'offen',
-        comment: 'Krank'
+    test('two absences, one removed -> no changes', () => {
+        const absences = [
+            {
+                date: '30.03.2021',
+                time: '13:00 - 13:45',
+                class: 'M403-INF17A,INF17B-FURR',
+                status: 'offen',
+                comment: 'Krank'
+            },
+            {
+                date: '30.03.2021',
+                time: '13:50 - 14:35',
+                class: 'M403-INF17A,INF17B-FURR',
+                status: 'Entschuldigt',
+                comment: 'Zahnarztbesuch'
+            }
+        ];
+        const newAbsences = [
+            {
+                date: '30.03.2021',
+                time: '13:50 - 14:35',
+                class: 'M403-INF17A,INF17B-FURR',
+                status: 'Entschuldigt',
+                comment: 'Zahnarztbesuch'
+            }
+        ];
+        expect(getChangedAbsences(absences, newAbsences))
+        .toEqual([[], []]);
     });
 });
 
-test('find by absence (absence matches not by date)', () => {
-    const absences = [
-        {
+describe('find by absence', () => {
+    test('find by absence', () => {
+        const absences = [
+            {
+                date: '30.03.2021',
+                time: '13:00 - 13:45',
+                class: 'M403-INF17A,INF17B-FURR',
+                status: 'offen',
+                comment: 'Krank'
+            },
+            {
+                date: '30.03.2021',
+                time: '13:50 - 14:35',
+                class: 'M403-INF17A,INF17B-FURR',
+                status: 'Entschuldigt',
+                comment: 'Zahnarztbesuch'
+            }
+        ];
+        const absence = {
             date: '30.03.2021',
             time: '13:00 - 13:45',
             class: 'M403-INF17A,INF17B-FURR',
             status: 'offen',
             comment: 'Krank'
-        },
-        {
-            date: '30.03.2021',
-            time: '13:50 - 14:35',
-            class: 'M403-INF17A,INF17B-FURR',
-            status: 'Entschuldigt',
-            comment: 'Zahnarztbesuch'
-        }
-    ];
-    const absence = {
-        date: '01.03.2017',
-        time: '13:00 - 13:45',
-        class: 'M403-INF17A,INF17B-FURR',
-        status: 'offen',
-        comment: 'Krank'
-    };
-    expect(findByAbsence(absences, absence))
-    .toBeUndefined();
-});
-
-test('find by absence (absence matches not by time)', () => {
-    const absences = [
-        {
+        };
+        expect(findByAbsence(absences, absence))
+        .toEqual({
             date: '30.03.2021',
             time: '13:00 - 13:45',
             class: 'M403-INF17A,INF17B-FURR',
             status: 'offen',
             comment: 'Krank'
-        },
-        {
-            date: '30.03.2021',
-            time: '13:50 - 14:35',
-            class: 'M403-INF17A,INF17B-FURR',
-            status: 'Entschuldigt',
-            comment: 'Zahnarztbesuch'
-        }
-    ];
-    const absence = {
-        date: '30.03.2021',
-        time: '14:40 - 15:25',
-        class: 'M403-INF17A,INF17B-FURR',
-        status: 'offen',
-        comment: 'Krank'
-    };
-    expect(findByAbsence(absences, absence))
-    .toBeUndefined();
-});
+        });
+    });
 
-test('find by absence (absence matches not by class)', () => {
-    const absences = [
-        {
-            date: '30.03.2021',
+    test('absence matches not by date', () => {
+        const absences = [
+            {
+                date: '30.03.2021',
+                time: '13:00 - 13:45',
+                class: 'M403-INF17A,INF17B-FURR',
+                status: 'offen',
+                comment: 'Krank'
+            },
+            {
+                date: '30.03.2021',
+                time: '13:50 - 14:35',
+                class: 'M403-INF17A,INF17B-FURR',
+                status: 'Entschuldigt',
+                comment: 'Zahnarztbesuch'
+            }
+        ];
+        const absence = {
+            date: '01.03.2017',
             time: '13:00 - 13:45',
             class: 'M403-INF17A,INF17B-FURR',
             status: 'offen',
             comment: 'Krank'
-        },
-        {
+        };
+        expect(findByAbsence(absences, absence))
+        .toBeUndefined();
+    });
+
+    test('absence matches not by time', () => {
+        const absences = [
+            {
+                date: '30.03.2021',
+                time: '13:00 - 13:45',
+                class: 'M403-INF17A,INF17B-FURR',
+                status: 'offen',
+                comment: 'Krank'
+            },
+            {
+                date: '30.03.2021',
+                time: '13:50 - 14:35',
+                class: 'M403-INF17A,INF17B-FURR',
+                status: 'Entschuldigt',
+                comment: 'Zahnarztbesuch'
+            }
+        ];
+        const absence = {
             date: '30.03.2021',
-            time: '13:50 - 14:35',
+            time: '14:40 - 15:25',
             class: 'M403-INF17A,INF17B-FURR',
-            status: 'Entschuldigt',
-            comment: 'Zahnarztbesuch'
-        }
-    ];
-    const absence = {
-        date: '30.03.2021',
-        time: '13:00 - 13:45',
-        class: 'M200-INF17A,INF17B-MOSD',
-        status: 'offen',
-        comment: 'Krank'
-    };
-    expect(findByAbsence(absences, absence))
-    .toBeUndefined();
+            status: 'offen',
+            comment: 'Krank'
+        };
+        expect(findByAbsence(absences, absence))
+        .toBeUndefined();
+    });
+
+    test('absence matches not by class', () => {
+        const absences = [
+            {
+                date: '30.03.2021',
+                time: '13:00 - 13:45',
+                class: 'M403-INF17A,INF17B-FURR',
+                status: 'offen',
+                comment: 'Krank'
+            },
+            {
+                date: '30.03.2021',
+                time: '13:50 - 14:35',
+                class: 'M403-INF17A,INF17B-FURR',
+                status: 'Entschuldigt',
+                comment: 'Zahnarztbesuch'
+            }
+        ];
+        const absence = {
+            date: '30.03.2021',
+            time: '13:00 - 13:45',
+            class: 'M200-INF17A,INF17B-MOSD',
+            status: 'offen',
+            comment: 'Krank'
+        };
+        expect(findByAbsence(absences, absence))
+        .toBeUndefined();
+    });
 });
-
-
-// updateAbsences
-
 
 test('update absences', () => {
     const absences = [
