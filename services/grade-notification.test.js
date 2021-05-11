@@ -13,146 +13,466 @@ const {
     findBySubject,
 } = require('./grade-notification');
 
-test('get changed grades (no grades changed)', () => {
-    const grades = [
-        {
-            "date": "29.01.2021",
-            "name": "Noise-Cancelling",
-            "value": "5.625",
-            "weighting": "1"
-        },
-        {
-            "date": "26.03.2021",
-            "name": "Schwingungen",
-            "value": "5.9",
-            "points": "17",
-            "weighting": "1"
-        }
-    ];
-    const newGrades = [
-        {
-            "date": "29.01.2021",
-            "name": "Noise-Cancelling",
-            "value": "5.625",
-            "weighting": "1"
-        },
-        {
-            "date": "26.03.2021",
-            "name": "Schwingungen",
-            "value": "5.9",
-            "points": "17",
-            "weighting": "1"
-        }
-    ];
-    expect(getChangedGrades(grades, newGrades))
-    .toEqual([]);
-});
+describe('get changed grades', () => {
+    test('no grades changed', () => {
+        const grades = [
+            {
+                "date": "29.01.2021",
+                "name": "Noise-Cancelling",
+                "value": "5.625",
+                "weighting": "1"
+            },
+            {
+                "date": "26.03.2021",
+                "name": "Schwingungen",
+                "value": "5.9",
+                "points": "17",
+                "weighting": "1"
+            }
+        ];
+        const newGrades = [
+            {
+                "date": "29.01.2021",
+                "name": "Noise-Cancelling",
+                "value": "5.625",
+                "weighting": "1"
+            },
+            {
+                "date": "26.03.2021",
+                "name": "Schwingungen",
+                "value": "5.9",
+                "points": "17",
+                "weighting": "1"
+            }
+        ];
+        expect(getChangedGrades(grades, newGrades))
+        .toEqual([[], []]);
+    });
 
-test('get changed grades (two grades, one changed)', () => {
-    const grades = [
-        {
-            "date": "29.01.2021",
-            "name": "Noise-Cancelling",
-            "value": "5.625",
-            "weighting": "1"
-        },
-        {
-            "date": "26.03.2021",
-            "name": "Schwingungen",
-            "value": "4.1",
-            "points": "11",
-            "weighting": "1"
-        }
-    ];
-    const newGrades = [
-        {
-            "date": "29.01.2021",
-            "name": "Noise-Cancelling",
-            "value": "5.625",
-            "weighting": "1"
-        },
-        {
-            "date": "26.03.2021",
-            "name": "Schwingungen",
-            "value": "5.9",
-            "points": "17",
-            "weighting": "1"
-        }
-    ];
-    expect(getChangedGrades(grades, newGrades))
-    .toEqual([
-        {
-            "date": "26.03.2021",
-            "name": "Schwingungen",
-            "value": "5.9", // changed
-            "points": "17", // changed
-            "weighting": "1"
-        }
-    ]);
-});
+    test('grade changed by date', () => {
+        const grades = [
+            {
+                "date": "29.01.2021",
+                "name": "Noise-Cancelling",
+                "value": "5.625",
+                "weighting": "1"
+            }
+        ];
+        const newGrades = [
+            {
+                "date": "11.02.2021",
+                "name": "Noise-Cancelling",
+                "value": "5.625",
+                "weighting": "1"
+            }
+        ];
+        expect(getChangedGrades(grades, newGrades))
+        .toEqual([
+            [
+                {
+                    "date": "11.02.2021",
+                    "name": "Noise-Cancelling",
+                    "value": "5.625",
+                    "weighting": "1"
+                }
+            ],
+            [
+                {
+                    "date": "11.02.2021",
+                    "name": "Noise-Cancelling",
+                    "value": "5.625",
+                    "weighting": "1"
+                }
+            ]
+        ]);
+    });
 
-test('get changed grades (one grade, one new grade)', () => {
-    const grades = [
-        {
-            "date": "29.01.2021",
-            "name": "Noise-Cancelling",
-            "value": "5.625",
-            "weighting": "1"
-        }
-    ];
-    const newGrades = [
-        {
-            "date": "29.01.2021",
-            "name": "Noise-Cancelling",
-            "value": "5.625",
-            "weighting": "1"
-        },
-        {
-            "date": "26.03.2021",
-            "name": "Schwingungen",
-            "value": "5.9",
-            "points": "17",
-            "weighting": "1"
-        }
-    ];
-    expect(getChangedGrades(grades, newGrades))
-    .toEqual([
-        {
-            "date": "26.03.2021",
-            "name": "Schwingungen",
-            "value": "5.9",
-            "points": "17",
-            "weighting": "1"
-        }
-    ]);
-});
+    test('grade changed by name', () => {
+        const grades = [
+            {
+                "date": "29.01.2021",
+                "name": "Noise-Cancelling",
+                "value": "5.625",
+                "weighting": "1"
+            }
+        ];
+        const newGrades = [
+            {
+                "date": "29.01.2021",
+                "name": "Grüsch-Abbreche",
+                "value": "5.625",
+                "weighting": "1"
+            }
+        ];
+        expect(getChangedGrades(grades, newGrades))
+        .toEqual([
+            [
+                {
+                    "date": "29.01.2021",
+                    "name": "Grüsch-Abbreche",
+                    "value": "5.625",
+                    "weighting": "1"
+                }
+            ],
+            [
+                {
+                    "date": "29.01.2021",
+                    "name": "Grüsch-Abbreche",
+                    "value": "5.625",
+                    "weighting": "1"
+                }
+            ]
+        ]);
+    });
 
-test('get changed grades (two grades, one removed -> no changes)', () => {
-    const grades = [
-        {
-            "date": "29.01.2021",
-            "name": "Noise-Cancelling",
-            "value": "5.625",
-            "weighting": "1"
-        },
-        {
-            "date": "26.03.2021",
-            "name": "Schwingungen",
-            "value": "5.9",
-            "points": "17",
-            "weighting": "1"
-        }
-    ];
-    const newGrades = [
-        {
-            "date": "29.01.2021",
-            "name": "Noise-Cancelling",
-            "value": "5.625",
-            "weighting": "1"
-        }
-    ];
-    expect(getChangedGrades(grades, newGrades))
-    .toEqual([]);
+    test('grade changed by value', () => {
+        const grades = [
+            {
+                "date": "29.01.2021",
+                "name": "Noise-Cancelling",
+                "value": "5.625",
+                "weighting": "1"
+            }
+        ];
+        const newGrades = [
+            {
+                "date": "29.01.2021",
+                "name": "Noise-Cancelling",
+                "value": "1.234",
+                "weighting": "1"
+            }
+        ];
+        expect(getChangedGrades(grades, newGrades))
+        .toEqual([
+            [
+                {
+                    "date": "29.01.2021",
+                    "name": "Noise-Cancelling",
+                    "value": "1.234",
+                    "weighting": "1"
+                }
+            ],
+            [
+                {
+                    "date": "29.01.2021",
+                    "name": "Noise-Cancelling",
+                    "value": "1.234",
+                    "weighting": "1"
+                }
+            ]
+        ]);
+    });
+
+    test('two grades, one changed', () => {
+        const grades = [
+            {
+                "date": "29.01.2021",
+                "name": "Noise-Cancelling",
+                "value": "5.625",
+                "weighting": "1"
+            },
+            {
+                "date": "26.03.2021",
+                "name": "Schwingungen",
+                "value": "4.1",
+                "points": "11",
+                "weighting": "1"
+            }
+        ];
+        const newGrades = [
+            {
+                "date": "29.01.2021",
+                "name": "Noise-Cancelling",
+                "value": "5.625",
+                "weighting": "1"
+            },
+            {
+                "date": "26.03.2021",
+                "name": "Schwingungen",
+                "value": "5.9",
+                "points": "17",
+                "weighting": "1"
+            }
+        ];
+        expect(getChangedGrades(grades, newGrades))
+        .toEqual([
+            [
+                {
+                    "date": "26.03.2021",
+                    "name": "Schwingungen",
+                    "value": "5.9", // changed
+                    "points": "17", // changed
+                    "weighting": "1"
+                }
+            ], 
+            [
+                {
+                    "date": "26.03.2021",
+                    "name": "Schwingungen",
+                    "value": "5.9", // changed
+                    "points": "17", // changed
+                    "weighting": "1"
+                }
+            ]
+        ]);
+    });
+
+    test('one grade, one new grade', () => {
+        const grades = [
+            {
+                "date": "29.01.2021",
+                "name": "Noise-Cancelling",
+                "value": "5.625",
+                "weighting": "1"
+            }
+        ];
+        const newGrades = [
+            {
+                "date": "29.01.2021",
+                "name": "Noise-Cancelling",
+                "value": "5.625",
+                "weighting": "1"
+            },
+            {
+                "date": "26.03.2021",
+                "name": "Schwingungen",
+                "value": "5.9",
+                "points": "17",
+                "weighting": "1"
+            }
+        ];
+        expect(getChangedGrades(grades, newGrades))
+        .toEqual([
+            [
+                {
+                    "date": "26.03.2021",
+                    "name": "Schwingungen",
+                    "value": "5.9",
+                    "points": "17",
+                    "weighting": "1"
+                }
+            ],
+            [
+                {
+                    "date": "26.03.2021",
+                    "name": "Schwingungen",
+                    "value": "5.9",
+                    "points": "17",
+                    "weighting": "1"
+                }
+            ]
+        ]);
+    });
+
+    test('two grades, one removed -> no changes', () => {
+        const grades = [
+            {
+                "date": "29.01.2021",
+                "name": "Noise-Cancelling",
+                "value": "5.625",
+                "weighting": "1"
+            },
+            {
+                "date": "26.03.2021",
+                "name": "Schwingungen",
+                "value": "5.9",
+                "points": "17",
+                "weighting": "1"
+            }
+        ];
+        const newGrades = [
+            {
+                "date": "29.01.2021",
+                "name": "Noise-Cancelling",
+                "value": "5.625",
+                "weighting": "1"
+            }
+        ];
+        expect(getChangedGrades(grades, newGrades))
+        .toEqual([[], []]);
+    });
+
+    test('points added', () => {
+        const grades = [
+            {
+                "date": "26.03.2021",
+                "name": "Schwingungen",
+                "value": "5.9",
+                "weighting": "1",
+                "average": "4.36"
+            }
+        ];
+        const newGrades = [
+            {
+                "date": "26.03.2021",
+                "name": "Schwingungen",
+                "value": "5.9",
+                "points": "17",
+                "weighting": "1",
+                "average": "4.36"
+            }
+        ];
+        expect(getChangedGrades(grades, newGrades))
+        .toEqual([
+            [
+                {
+                    "date": "26.03.2021",
+                    "name": "Schwingungen",
+                    "value": "5.9",
+                    "points": "17",
+                    "weighting": "1",
+                    "average": "4.36"
+                }
+            ], 
+            []
+        ]);
+    });
+
+    test('points removed', () => {
+        const grades = [
+            {
+                "date": "26.03.2021",
+                "name": "Schwingungen",
+                "value": "5.9",
+                "points": "17",
+                "weighting": "1",
+                "average": "4.36"
+            }
+        ];
+        const newGrades = [
+            {
+                "date": "26.03.2021",
+                "name": "Schwingungen",
+                "value": "5.9",
+                "weighting": "1",
+                "average": "4.36"
+            }
+        ];
+        expect(getChangedGrades(grades, newGrades))
+        .toEqual([
+            [
+                {
+                    "date": "26.03.2021",
+                    "name": "Schwingungen",
+                    "value": "5.9",
+                    "weighting": "1",
+                    "average": "4.36"
+                }
+            ], 
+            []
+        ]);
+    });
+
+    test('points changed', () => {
+        const grades = [
+            {
+                "date": "26.03.2021",
+                "name": "Schwingungen",
+                "value": "5.9",
+                "points": "17",
+                "weighting": "1",
+                "average": "4.36"
+            }
+        ];
+        const newGrades = [
+            {
+                "date": "26.03.2021",
+                "name": "Schwingungen",
+                "value": "5.9",
+                "points": "19",
+                "weighting": "1",
+                "average": "4.36"
+            }
+        ];
+        expect(getChangedGrades(grades, newGrades))
+        .toEqual([
+            [
+                {
+                    "date": "26.03.2021",
+                    "name": "Schwingungen",
+                    "value": "5.9",
+                    "points": "19",
+                    "weighting": "1",
+                    "average": "4.36"
+                }
+            ], 
+            []
+        ]);
+    });
+
+    test('weighting changed', () => {
+        const grades = [
+            {
+                "date": "26.03.2021",
+                "name": "Schwingungen",
+                "value": "5.9",
+                "points": "17",
+                "weighting": "1",
+                "average": "4.36"
+            }
+        ];
+        const newGrades = [
+            {
+                "date": "26.03.2021",
+                "name": "Schwingungen",
+                "value": "5.9",
+                "points": "17",
+                "weighting": "3",
+                "average": "4.36"
+            }
+        ];
+        expect(getChangedGrades(grades, newGrades))
+        .toEqual([
+            [
+                {
+                    "date": "26.03.2021",
+                    "name": "Schwingungen",
+                    "value": "5.9",
+                    "points": "17",
+                    "weighting": "3",
+                    "average": "4.36"
+                }
+            ], 
+            []
+        ]);
+    });
+
+    test('average changed', () => {
+        const grades = [
+            {
+                "date": "26.03.2021",
+                "name": "Schwingungen",
+                "value": "5.9",
+                "points": "17",
+                "weighting": "1",
+                "average": "4.36"
+            }
+        ];
+        const newGrades = [
+            {
+                "date": "26.03.2021",
+                "name": "Schwingungen",
+                "value": "5.9",
+                "points": "17",
+                "weighting": "1",
+                "average": "4.77"
+            }
+        ];
+        expect(getChangedGrades(grades, newGrades))
+        .toEqual([
+            [
+                {
+                    "date": "26.03.2021",
+                    "name": "Schwingungen",
+                    "value": "5.9",
+                    "points": "17",
+                    "weighting": "1",
+                    "average": "4.77"
+                }
+            ], 
+            []
+        ]);
+    });
 });
 
 test('get changed subjects', () => {
@@ -284,32 +604,62 @@ test('get changed subjects', () => {
     ];
     expect(getChangedSubjects(subjects, newSubjects))
     .toEqual([
-        {
-            "class": "D-BM1_TE17A-GEIM",
-            "name": "Deutsch",
-            "average": "4.875",
-            "grades": [
-                {
-                    "date": "22.03.2021",
-                    "name": "Schachnovelle",
-                    "value": "5.25",
-                    "points": "12",
-                    "weighting": "1"
-                },
-            ]
-        },
-        {
-            "class": "EB-BM1_TE17A-BAYF",
-            "name": "Englisch",
-            "average": "--",
-            "grades": [
-                {
-                    "date": "01.03.2021",
-                    "name": "Interview - Tiger mother",
-                    "weighting": "1"
-                }
-            ]
-        }
+        [
+            {
+                "class": "D-BM1_TE17A-GEIM",
+                "name": "Deutsch",
+                "average": "4.875",
+                "grades": [
+                    {
+                        "date": "22.03.2021",
+                        "name": "Schachnovelle",
+                        "value": "5.25",
+                        "points": "12",
+                        "weighting": "1"
+                    },
+                ]
+            },
+            {
+                "class": "EB-BM1_TE17A-BAYF",
+                "name": "Englisch",
+                "average": "--",
+                "grades": [
+                    {
+                        "date": "01.03.2021",
+                        "name": "Interview - Tiger mother",
+                        "weighting": "1"
+                    }
+                ]
+            }
+        ],
+        [
+            {
+                "class": "D-BM1_TE17A-GEIM",
+                "name": "Deutsch",
+                "average": "4.875",
+                "grades": [
+                    {
+                        "date": "22.03.2021",
+                        "name": "Schachnovelle",
+                        "value": "5.25",
+                        "points": "12",
+                        "weighting": "1"
+                    },
+                ]
+            },
+            {
+                "class": "EB-BM1_TE17A-BAYF",
+                "name": "Englisch",
+                "average": "--",
+                "grades": [
+                    {
+                        "date": "01.03.2021",
+                        "name": "Interview - Tiger mother",
+                        "weighting": "1"
+                    }
+                ]
+            }
+        ]
     ]);
 });
 
@@ -508,162 +858,167 @@ test('update subjects', () => {
     })
 });
 
-test('find by grade (one grade matches)', () => {
-    const grades = [
-        {
-            "date": "22.03.2021",
-            "name": "Schachnovelle",
-            "value": "5.25",
-            "points": "12",
-            "weighting": "1"
-        },
-        {
+
+describe('find by grade', () => {
+    test('one grade matches', () => {
+        const grades = [
+            {
+                "date": "22.03.2021",
+                "name": "Schachnovelle",
+                "value": "5.25",
+                "points": "12",
+                "weighting": "1"
+            },
+            {
+                "date": "08.04.2021",
+                "name": "Literaturgeschichte",
+                "value": "4.5",
+                "points": "18",
+                "weighting": "1"
+            }
+        ];
+        const grade = {
+            "date": "08.04.2021",
+            "name": "Literaturgeschichte",
+            "value": "5.5",
+            "points": "22",
+            "weighting": "0.3"
+        };
+        expect(findByGrade(grades, grade))
+        .toEqual({
             "date": "08.04.2021",
             "name": "Literaturgeschichte",
             "value": "4.5",
             "points": "18",
             "weighting": "1"
-        }
-    ];
-    const grade = {
-        "date": "08.04.2021",
-        "name": "Literaturgeschichte",
-        "value": "5.5",
-        "points": "22",
-        "weighting": "0.3"
-    };
-    expect(findByGrade(grades, grade))
-    .toEqual({
-        "date": "08.04.2021",
-        "name": "Literaturgeschichte",
-        "value": "4.5",
-        "points": "18",
-        "weighting": "1"
+        });
+    });
+
+    test('grade matches not by name', () => {
+        const grades = [
+            {
+                "date": "22.03.2021",
+                "name": "Schachnovelle",
+                "value": "5.25",
+                "points": "12",
+                "weighting": "1"
+            },
+            {
+                "date": "08.04.2021",
+                "name": "Literaturgeschichte",
+                "value": "4.5",
+                "points": "18",
+                "weighting": "1"
+            }
+        ];
+        const grade = {
+            "date": "08.04.2021",
+            "name": "Mein Kampf",
+            "value": "5.5",
+            "points": "22",
+            "weighting": "0.3"
+        };
+        expect(findByGrade(grades, grade))
+        .toBeUndefined();
+    });
+
+    test('grade matches not by date', () => {
+        const grades = [
+            {
+                "date": "22.03.2021",
+                "name": "Schachnovelle",
+                "value": "5.25",
+                "points": "12",
+                "weighting": "1"
+            },
+            {
+                "date": "08.04.2021",
+                "name": "Literaturgeschichte",
+                "value": "4.5",
+                "points": "18",
+                "weighting": "1"
+            }
+        ];
+        const grade = {
+            "date": "01.01.2019",
+            "name": "Literaturgeschichte",
+            "value": "5.5",
+            "points": "22",
+            "weighting": "0.3"
+        };
+        expect(findByGrade(grades, grade))
+        .toBeUndefined();
     });
 });
 
-test('find by grade (grade matches not by name)', () => {
-    const grades = [
-        {
-            "date": "22.03.2021",
-            "name": "Schachnovelle",
-            "value": "5.25",
-            "points": "12",
-            "weighting": "1"
-        },
-        {
-            "date": "08.04.2021",
-            "name": "Literaturgeschichte",
-            "value": "4.5",
-            "points": "18",
-            "weighting": "1"
-        }
-    ];
-    const grade = {
-        "date": "08.04.2021",
-        "name": "Mein Kampf",
-        "value": "5.5",
-        "points": "22",
-        "weighting": "0.3"
-    };
-    expect(findByGrade(grades, grade))
-    .toBeUndefined();
-});
-
-test('find by grade (grade matches not by date)', () => {
-    const grades = [
-        {
-            "date": "22.03.2021",
-            "name": "Schachnovelle",
-            "value": "5.25",
-            "points": "12",
-            "weighting": "1"
-        },
-        {
-            "date": "08.04.2021",
-            "name": "Literaturgeschichte",
-            "value": "4.5",
-            "points": "18",
-            "weighting": "1"
-        }
-    ];
-    const grade = {
-        "date": "01.01.2019",
-        "name": "Literaturgeschichte",
-        "value": "5.5",
-        "points": "22",
-        "weighting": "0.3"
-    };
-    expect(findByGrade(grades, grade))
-    .toBeUndefined();
-});
-
-test('find by subject (one subject matches)', () => {
-    const subjects = [
-        {
-            "class": "PH-BM1_TE17A-HARS",
-            "name": "Physik",
-            "average": "5.763",
-        },
-        {
+describe('find by subject', () => {
+    test('one subject matches', () => {
+        const subjects = [
+            {
+                "class": "PH-BM1_TE17A-HARS",
+                "name": "Physik",
+                "average": "5.763",
+            },
+            {
+                "class": "M326-INF17A,INF17B-MOSD",
+                "name": "M326 Objektorientiert entwerfen und implementieren",
+                "average": "6.000"
+            }
+        ];
+        const subject = {
+            "class": "M326-INF17A,INF17B-MOSD",
+            "name": "M326 Objektorientiert entwerfen und implementieren",
+            "average": "4.000"
+        };
+        expect(findBySubject(subjects, subject))
+        .toEqual({
             "class": "M326-INF17A,INF17B-MOSD",
             "name": "M326 Objektorientiert entwerfen und implementieren",
             "average": "6.000"
-        }
-    ];
-    const subject = {
-        "class": "M326-INF17A,INF17B-MOSD",
-        "name": "M326 Objektorientiert entwerfen und implementieren",
-        "average": "4.000"
-    };
-    expect(findBySubject(subjects, subject))
-    .toEqual({
-        "class": "M326-INF17A,INF17B-MOSD",
-        "name": "M326 Objektorientiert entwerfen und implementieren",
-        "average": "6.000"
+        });
     });
-});
 
-test('find by subject (subject matches not by class)', () => {
-    const subjects = [
-        {
-            "class": "PH-BM1_TE17A-HARS",
-            "name": "Physik",
-            "average": "5.763",
-        },
-        {
-            "class": "M326-INF17A,INF17B-MOSD",
+    test('subject matches not by class', () => {
+        const subjects = [
+            {
+                "class": "PH-BM1_TE17A-HARS",
+                "name": "Physik",
+                "average": "5.763",
+            },
+            {
+                "class": "M326-INF17A,INF17B-MOSD",
+                "name": "M326 Objektorientiert entwerfen und implementieren",
+                "average": "6.000"
+            }
+        ];
+        const subject = {
+            "class": "M420-INF20A,INF20B-OFFLINE",
             "name": "M326 Objektorientiert entwerfen und implementieren",
-            "average": "6.000"
-        }
-    ];
-    const subject = {
-        "class": "M420-INF20A,INF20B-OFFLINE",
-        "name": "M326 Objektorientiert entwerfen und implementieren",
-        "average": "4.000"
-    };
-    expect(findBySubject(subjects, subject))
-    .toBeUndefined();
-});
+            "average": "4.000"
+        };
+        expect(findBySubject(subjects, subject))
+        .toBeUndefined();
+    });
 
-test('find by subject (subject matches not by name)', () => {
-    const subjects = [
-        {
-            "class": "PH-BM1_TE17A-HARS",
-            "name": "Physik",
-            "average": "5.763",
-        },
-        {
+    test('subject matches not by name', () => {
+        const subjects = [
+            {
+                "class": "PH-BM1_TE17A-HARS",
+                "name": "Physik",
+                "average": "5.763",
+            },
+            {
+                "class": "M326-INF17A,INF17B-MOSD",
+                "name": "M326 Objektorientiert entwerfen und implementieren",
+                "average": "6.000"
+            }
+        ];
+        const subject = {
             "class": "M326-INF17A,INF17B-MOSD",
-            "name": "M326 Objektorientiert entwerfen und implementieren",
-            "average": "6.000"
-        }
-    ];
-    const subject = {
-        "class": "M326-INF17A,INF17B-MOSD",
-        "name": "M420 MLM/Schneeballsysteme",
-        "average": "4.000"
-    };
-    expect(findBySubject(subjects, subject))
-    .toBeUndefined();
+            "name": "M420 MLM/Schneeballsysteme",
+            "average": "4.000"
+        };
+        expect(findBySubject(subjects, subject))
+        .toBeUndefined();
+    });
 });

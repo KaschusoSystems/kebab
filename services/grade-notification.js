@@ -19,19 +19,19 @@ async function processGradeNotifications() {
             const newSubjects = await kaschusoApi.scrapeGrades(user);
             const savedSubjects = await Subject.find({'user': user.id});
             
-            const changedSubjects = await getChangedSubjects(Object.assign(savedSubjects, {}), newSubjects);
-            const hasChanges = changedSubjects.length !== 0;
+            const [changedSubjects, changedSubjectsToNotify] = await getChangedSubjects(Object.assign(savedSubjects, {}), newSubjects);
 
-            if (hasChanges) {
-                console.log(`new/changed grades in ${changedSubjects.length} subject(s) for user ${user.username}`);
-                await gmail.sendGradeNotification(user, changedSubjects);
-                
-                // Only update db if changes detected
+            if (changedSubjects.length !== 0) {
                 await Promise.all((await updateSubjects(savedSubjects, changedSubjects, user))
                     .map(subject => subject.save()));
+            }
+
+            if (changedSubjectsToNotify.length !== 0) {
+                console.log(`new/changed grades in ${changedSubjectsToNotify.length} subject(s) for user ${user.username}`);
+                await gmail.sendGradeNotification(user, changedSubjectsToNotify);
                 
                 if (user.iftttWebhookKey) {
-                    webhook.triggerWebhook(user.iftttWebhookKey, webhookTriggerName, changedSubjects);
+                    webhook.triggerWebhook(user.iftttWebhookKey, webhookTriggerName, changedSubjectsToNotify);
                 }
             } else {
                 console.log(`no new/changed grades for user ${user.username}`);
@@ -73,20 +73,27 @@ async function mergeSubjectObject(subject, changedSubject) {
 
 function getChangedSubjects(subjects, newSubjects) {
     const changedSubjects = [];
+    const changedSubjectsToNotify = [];
     newSubjects.map(newSubject => {
         const subject = findBySubject(subjects, newSubject);
         if (subject) {
-            const changedGrades = getChangedGrades(subject.grades, newSubject.grades);
+            const [changedGrades, changedGradesToNotify] = getChangedGrades(subject.grades, newSubject.grades);
             if (changedGrades && changedGrades.length > 0) {
                 const changedSubject = Object.assign(newSubject, {});
-                changedSubject.grades = changedGrades;
+                changedSubject.grades = changedGradesToNotify;
                 changedSubjects.push(changedSubject);
+            }
+            if (changedGradesToNotify && changedGradesToNotify.length > 0) {
+                const changedSubject = Object.assign(newSubject, {});
+                changedSubject.grades = changedGradesToNotify;
+                changedSubjectsToNotify.push(changedSubject);
             }
         } else {
             changedSubjects.push(newSubject);
+            changedSubjectsToNotify.push(newSubject);
         }
     });
-    return changedSubjects;
+    return [changedSubjects, changedSubjectsToNotify];
 }
 
 function findByGrade(grades, grade) {
@@ -98,8 +105,22 @@ function findBySubject(subjects, subject) {
 }
 
 function getChangedGrades(grades, newGrades) {
-    return newGrades.filter(x => !grades
-        .find(y => x.name === y.name && x.value == y.value)); // '5.5' shall be equal to 5.5 (string == number)
+    // anything changed
+    const changedGrades = newGrades.filter(x => !grades
+        .find(y => x.date      === y.date
+                && x.name      === y.name
+                && x.value     ==  y.value
+                && x.points    ==  y.points
+                && x.weighting ==  y.weighting
+                && x.average   ==  y.average));
+        
+    // only the mark changed
+    const changedGradesToNotify = changedGrades.filter(x => !grades
+        .find(y => x.date === y.date
+            && x.name     === y.name
+            && x.value    ==  y.value)); // '5.5' shall be equal to 5.5 (string == number)
+
+    return [changedGrades, changedGradesToNotify];
 }
 
 module.exports = {
