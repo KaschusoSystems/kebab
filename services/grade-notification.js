@@ -31,7 +31,7 @@ async function processGradeNotifications() {
                 await gmail.sendGradeNotification(user, changedSubjectsToNotify);
                 
                 if (user.iftttWebhookKey) {
-                    webhook.triggerWebhook(user, webhookTriggerName, changedSubjects);
+                    webhook.triggerWebhook(user, webhookTriggerName, changedSubjectsToNotify);
                 }
             } else {
                 console.log(`no new/changed grades for user ${user.username}`);
