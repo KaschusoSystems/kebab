@@ -31,7 +31,7 @@ async function processAbsenceNotifications() {
                     await gmail.sendAbsenceNotification(user, changedAbsencesToNotify);
                     
                     if (user.iftttWebhookKey) {
-                        webhook.triggerWebhook(user.iftttWebhookKey, webhookTriggerName, changedAbsencesToNotify);
+                        webhook.triggerWebhook(user, webhookTriggerName, changedAbsences);
                     }
                 } else {
                     console.log(`no new/changed absences for user ${user.username}`);

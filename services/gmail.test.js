@@ -202,3 +202,23 @@ test('render absence reminder html', async () => {
         absences: absences
     })).toEqual(fs.readFileSync('./views/__test__/absence-reminder-mail.html', 'utf8'));
 });
+
+test('render webhook error', async () => {
+    expect(await eta.renderFile('mail', {
+        preheader: 'IFTTT Webhook schlägt fehl❌',
+        title: 'IFTTT Webhook schlägt fehl❌',
+        pages: {
+            main: 'webhook-error'
+        },
+        env: {
+            kaschuso: 'https://kaschuso.so.ch/',
+            gyros: 'http://localhost/',
+            colors: {
+                red: '#EF476F'
+            }
+        },
+        user: {
+            mandator: 'school'
+        }
+    })).toEqual(fs.readFileSync('./views/__test__/webhook-error-mail.html', 'utf8'));
+});

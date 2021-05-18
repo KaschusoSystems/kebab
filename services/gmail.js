@@ -125,7 +125,24 @@ async function sendAbsenceReminder(user, absences) {
     } catch (e) {
         console.log(e);
     }
+}
 
+async function sendIftttWebhookError(user) {
+    try {
+        const html = await eta.renderFile('mail', {
+            preheader: 'IFTTT Webhook schlägt fehl❌',
+            title: 'IFTTT Webhook schlägt fehl❌',
+            pages: {
+                main: 'webhook-error'
+            },
+            env: etaEnv,
+            user: user
+        });
+        await gmailTransporter.sendMail(await getMail(user.email, 'IFTTT Webhook schlägt fehl❌', html));
+        console.log('Ifttt error sent');
+    } catch (e) {
+        console.log(e);
+    }
 }
 
 module.exports = {
@@ -133,6 +150,7 @@ module.exports = {
     sendGradeNotification,
     sendAbsenceNotification,
     sendAbsenceReminder,
+    sendIftttWebhookError,
     // tests
     getEmoji,
 };

@@ -27,7 +27,7 @@ async function processAbsenceReminders() {
                 await Promise.all(absences.map(absence => absence.notifiedNow().save()));
                 
                 if (user.iftttWebhookKey) {
-                    webhook.triggerWebhook(user.iftttWebhookKey, webhookTriggerName, absences);
+                    webhook.triggerWebhook(user, webhookTriggerName, absences);
                 }
             } else {
                 console.log(`no absences to remind for user ${user.username}`);
