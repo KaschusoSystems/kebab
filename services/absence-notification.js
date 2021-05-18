@@ -15,29 +15,33 @@ async function processAbsenceNotifications() {
         console.log(`${users.length} users found for absence notifications`);
 
         await Promise.all(users.map(async (user) => {
-            const newAbsences = await kaschusoApi.scrapeAbsences(user);
-            const savedAbsences = await Absence.find({'user': user.id});
-            
-            const changedAbsences= await getChangedAbsences(Object.assign(savedAbsences, {}), newAbsences);
-            const hasChanges = changedAbsences.length !== 0;
+            try {
+                const newAbsences = await kaschusoApi.scrapeAbsences(user);
+                const savedAbsences = await Absence.find({'user': user.id});
+                
+                const [changedAbsences, changedAbsencesToNotify] = await getChangedAbsences(Object.assign(savedAbsences, {}), newAbsences);
 
-            if (hasChanges) {
-                console.log(`${changedAbsences.length} new/changed absence(s) for user ${user.username}`);
-                await gmail.sendAbsenceNotification(user, changedAbsences);
-                
-                // Only update db if changes detected
-                await Promise.all((await updateAbsences(savedAbsences, changedAbsences, user))
-                    .map(absence => absence.save()));
-                
-                if (user.iftttWebhookKey) {
-                    webhook.triggerWebhook(user, webhookTriggerName, changedAbsences);
+                if (changedAbsences.length !== 0) {
+                    await Promise.all((await updateAbsences(savedAbsences, changedAbsences, user))
+                        .map(absence => absence.save()));
                 }
-            } else {
-                console.log(`no new/changed absences for user ${user.username}`);
+    
+                if (changedAbsencesToNotify.length !== 0) {
+                    console.log(`${changedAbsencesToNotify.length} new/changed absence(s) for user ${user.username}`);
+                    await gmail.sendAbsenceNotification(user, changedAbsencesToNotify);
+                    
+                    if (user.iftttWebhookKey) {
+                        webhook.triggerWebhook(user, webhookTriggerName, changedAbsences);
+                    }
+                } else {
+                    console.log(`no new/changed absences for user ${user.username}`);
+                }
+            } catch (err) {
+                console.error(`error during absence reminder processing for user ${user.username}: ${err}`);
             }
         }));
     } catch (error) {
-        console.log('Error during absence notification processing: ' + error);
+        console.error('Error during absence notification processing: ' + error);
         throw error;
     }
 }
@@ -56,6 +60,7 @@ async function processAbsenceNotifications() {
 
 function getChangedAbsences(absences, newAbsences) {
     const changedAbsences = [];
+    const changedAbsencesToNotify = [];
     newAbsences.map(newAbsence => {
         const absence = findByAbsence(absences, newAbsence);
         if (absence) {
@@ -67,9 +72,10 @@ function getChangedAbsences(absences, newAbsences) {
             }
         } else {
             changedAbsences.push(newAbsence);
+            changedAbsencesToNotify.push(newAbsence);
         }
     });
-    return changedAbsences;
+    return [changedAbsences, changedAbsencesToNotify];
 }
 
 function findByAbsence(absences, absence) {
