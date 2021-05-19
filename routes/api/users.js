@@ -70,6 +70,18 @@ router.put('/user/auth', auth.required, function (req, res, next) {
   }).catch(next);
 });
 
+router.delete('/user', auth.required, async function (req, res, next) {
+  const user = await User.findById(req.payload.id);
+  if (!user) {
+    return res.status(422).json({ errors: { password: "user not found" } });
+  }
+  
+  // TODO: remove all user related entities
+  await User.deleteOne(user);
+  
+  return res.json({ message: 'user deleted' });
+});
+
 router.post('/users/login', function (req, res, next) {
   const username = req.body.username;
   const password = req.body.password;
