@@ -3,6 +3,7 @@ var LocalStrategy = require('passport-local').Strategy;
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
 
+const logger = require('../domain/logger');
 const kaschusoApi = require('../services/kaschuso-api');
 const gmail = require('../services/gmail');
 
