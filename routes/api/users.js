@@ -2,7 +2,9 @@ var mongoose = require('mongoose');
 var router = require('express').Router();
 var passport = require('passport');
 var User = mongoose.model('User');
-var auth = require('../auth');
+
+const auth = require('../auth');
+const kaschusoApi = require('../../services/kaschuso-api');
 
 router.put('/user', auth.required, function (req, res, next) {
   User.findById(req.payload.id).then(function (user) {
@@ -28,6 +30,29 @@ router.put('/user', auth.required, function (req, res, next) {
     }
     if (typeof req.body.iftttWebhookKey !== 'undefined') {
       user.iftttWebhookKey = req.body.iftttWebhookKey;
+    }
+
+    return user.save().then(function () {
+      return res.json({ user: user.toProfileJSONFor() });
+    });
+  }).catch(next);
+});
+
+router.put('/user/auth', auth.required, function (req, res, next) {
+  User.findById(req.payload.id).then(async function (user) {
+    if (!user) {
+      return res.sendStatus(401);
+    }
+
+    if (typeof req.body.password !== 'undefined') {
+      const password = req.body.password;
+      const isLoginValid = await kaschusoApi.login(user.username, password, user.mandator);
+      if (isLoginValid) {        
+        user.setCredential(password);
+        user.kaschusoAuthenticated = true;
+      } else {
+        return res.status(422).json({ errors: { password: "kaschuso auth failed" } });
+      }
     }
 
     return user.save().then(function () {
