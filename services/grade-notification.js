@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var User = mongoose.model('User');
 var Subject = mongoose.model('Subject');
 
+const logger = require('../domain/logger');
 const kaschusoApi = require('./kaschuso-api');
 const webhook = require('./webhook');
 const gmail = require('./gmail');
@@ -9,10 +10,10 @@ const gmail = require('./gmail');
 const webhookTriggerName = 'kaschusosystems_notification_grade';
 
 async function processGradeNotifications() {
-    console.log('Processing grade notifications...');
+    logger.info('grade-notification.process.started');
     
     const users = await User.find({ gradeNotifications: true });
-    console.log(`${users.length} users found for grade notifications`);
+    logger.info(`grade-notification.process.usersFound.${users.length}`);
 
     await Promise.all(users.map(async (user) => {
         try {
@@ -26,18 +27,16 @@ async function processGradeNotifications() {
                     .map(subject => subject.save()));
             }
 
+            logger.debug(`grade-notification.process.user-${user.username}.newOrChangedGradesFound.${changedSubjectsToNotify.length}`);
             if (changedSubjectsToNotify.length !== 0) {
-                console.log(`new/changed grades in ${changedSubjectsToNotify.length} subject(s) for user ${user.username}`);
                 await gmail.sendGradeNotification(user, changedSubjectsToNotify);
                 
                 if (user.iftttWebhookKey) {
                     webhook.triggerWebhook(user, webhookTriggerName, changedSubjectsToNotify);
                 }
-            } else {
-                console.log(`no new/changed grades for user ${user.username}`);
             }
         } catch (err) {
-            console.error(`error during grade notification processing for user ${user.username}: ${err}`);
+            logger.error(`grade-notification.process.user-${user.username}: ${err}`);
         }
     }));
 }

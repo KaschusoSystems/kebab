@@ -8,7 +8,8 @@ const path = require('path'),
   errorhandler = require('errorhandler'),
   mongoose = require('mongoose'),
   secret = require('./config').secret,
-  eta = require('eta');
+  eta = require('eta'),
+  logger = require('./domain/logger');
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -23,6 +24,12 @@ app.use(bodyParser.json());
 app.use(require('method-override')());
 app.use(session({ secret: secret, cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false }));
 
+// Express logging
+app.use((req, res, done) => {
+  logger.info(req.originalUrl);
+  done();
+});
+
 if (!isProduction) {
   app.use(errorhandler());
 }
@@ -36,9 +43,6 @@ eta.configure({
 
 // Database connection
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017', { useNewUrlParser: true });
-if (!isProduction) {
-  mongoose.set('debug', true);
-}
 
 require('./models/User');
 require('./config/passport');
@@ -59,7 +63,7 @@ app.use(function (req, res, next) {
 // will print stacktrace
 if (!isProduction) {
   app.use(function (err, req, res, next) {
-    console.log(err.stack);
+    logger.error(`app.errorHandler: ${err.stack}`);
 
     res.status(err.status || 500);
 
@@ -85,5 +89,5 @@ app.use(function (err, req, res, next) {
 });
 
 var server = app.listen(process.env.PORT || 3000, function () {
-  console.log('Listening on port ' + server.address().port);
+  logger.info(`app.listening.port-${server.address().port}`);
 });

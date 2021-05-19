@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var User = mongoose.model('User');
 var Absence = mongoose.model('Absence');
 
+const logger = require('../domain/logger');
 const kaschusoApi = require('./kaschuso-api');
 const webhook = require('./webhook');
 const gmail = require('./gmail');
@@ -9,10 +10,10 @@ const gmail = require('./gmail');
 const webhookTriggerName = 'kaschusosystems_notification_absence';
 
 async function processAbsenceNotifications() {
-    console.log('Processing absence notifications...');
+    logger.info('absence-notification.process.started');
     try {
         const users = await User.find({ absenceNotifications: true });
-        console.log(`${users.length} users found for absence notifications`);
+        logger.debug(`absence-notification.process.usersFound.${users.length}`);
 
         await Promise.all(users.map(async (user) => {
             try {
@@ -26,22 +27,22 @@ async function processAbsenceNotifications() {
                         .map(absence => absence.save()));
                 }
     
+                logger.debug(`absence-notification.process.user-${user.username}.absencesFound.${changedAbsencesToNotify.length}`);
                 if (changedAbsencesToNotify.length !== 0) {
-                    console.log(`${changedAbsencesToNotify.length} new/changed absence(s) for user ${user.username}`);
-                    await gmail.sendAbsenceNotification(user, changedAbsencesToNotify);
                     
+
+                    await gmail.sendAbsenceNotification(user, changedAbsencesToNotify);
+
                     if (user.iftttWebhookKey) {
                         webhook.triggerWebhook(user, webhookTriggerName, changedAbsences);
                     }
-                } else {
-                    console.log(`no new/changed absences for user ${user.username}`);
                 }
             } catch (err) {
-                console.error(`error during absence reminder processing for user ${user.username}: ${err}`);
+                logger.error(`absence-notification.process.user-${user.username}: ${err}`);
             }
         }));
     } catch (error) {
-        console.error('Error during absence notification processing: ' + error);
+        logger.error(`absence-notification.process: ${error}`);
         throw error;
     }
 }
