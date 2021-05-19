@@ -9,6 +9,7 @@ const path = require('path'),
   mongoose = require('mongoose'),
   secret = require('./config').secret,
   eta = require('eta');
+  logger = require('./domain/logger');
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -22,6 +23,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(require('method-override')());
 app.use(session({ secret: secret, cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false }));
+
+// Express logging
+app.use((req, res, done) => {
+  logger.info(req.originalUrl);
+  done();
+});
 
 if (!isProduction) {
   app.use(errorhandler());
@@ -37,7 +44,7 @@ eta.configure({
 // Database connection
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017', { useNewUrlParser: true });
 if (!isProduction) {
-  mongoose.set('debug', true);
+  mongoose.set('debug', false);
 }
 
 require('./models/User');

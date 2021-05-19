@@ -3,6 +3,7 @@ const cron = require('node-cron');
 const { processGradeNotifications } = require('./grade-notification');
 const { processAbsenceNotifications } = require('./absence-notification');
 const { processAbsenceReminders } = require('./absence-reminder');
+const logger = require('../domain/logger');
 
 // do not send notifications when running tests
 if (process.env.NODE_ENV !== 'test') {
@@ -17,4 +18,6 @@ if (process.env.NODE_ENV !== 'test') {
     cron.schedule(process.env.ABSENCE_NOTIFICATION_CRON_STRING || '0 0 * * *', processAbsenceNotifications);
     // default: Every day at midnight
     cron.schedule(process.env.ABSENCE_REMINDER_CRON_STRING     || '0 0 * * *', processAbsenceReminders);
+
+    logger.info('scheduler.jobsScheduled');
 }

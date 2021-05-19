@@ -11,6 +11,7 @@ passport.use(new LocalStrategy({
   passwordField: 'password',
   passReqToCallback: true
 }, async function (req, username, password, done) {
+  logger.info(`passport.localStrategy.invoked`);
   const mandator = req.body.mandator;
   const isLoginValid = await kaschusoApi.login(username, password, mandator);
 
@@ -19,6 +20,7 @@ passport.use(new LocalStrategy({
     mandator: mandator
   }).then(async function (user) {
     if (!user && !isLoginValid) {
+      logger.debug(`passport.localStrategy.kaschusoLoginInvalid.user-${username}.mandator-${mandator}`);
       return done(null, false, {
         errors: {
           'Kaschuso login': 'is invalid'
@@ -27,10 +29,13 @@ passport.use(new LocalStrategy({
     }
 
     if (!user && isLoginValid) {
+      logger.debug(`passport.localStrategy.newUser.user-${username}.mandator-${mandator}`);
       user = await createNewUser(username, password, mandator);
     } else if (user && !isLoginValid) {
+      logger.debug(`passport.localStrategy.kaschusoNotAuthenticated.user-${username}.mandator-${mandator}`);
       user.kaschusoAuthenticated = false;
     } else {
+      logger.debug(`passport.localStrategy.authenticated.user-${username}.mandator-${mandator}`);
       user.kaschusoAuthenticated = true;
     }
     

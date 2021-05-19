@@ -1,6 +1,7 @@
 const nodemailer = require('nodemailer');
 const eta = require('eta');
 
+const logger = require('../domain/logger');
 const etaEnv = require('../config').etaEnv;
 
 const gmailTransporter = createTransporter();
@@ -66,9 +67,9 @@ async function sendGradeNotification(user, subjects) {
             emoji: emoji
         });
         await gmailTransporter.sendMail(await getMail(user.email, 'Auf Kaschuso sind neue Noten verfügbar ❗', html));
-        console.log('Grade Notification sent');
+        logger.info(`gmail.gradeNotification.sent.to.${user.email}`);
     } catch (e) {
-        console.log(e);
+        logger.error(`gmail.gradeNotification: ${e}`);
     }
 }
 
@@ -85,9 +86,9 @@ async function sendAbsenceNotification(user, absences) {
             absences: absences
         });
         await gmailTransporter.sendMail(await getMail(user.email, 'Auf Kaschuso sind neue Absenzen verfügbar 🔔', html));
-        console.log('Absence Notification sent');
+        logger.info(`gmail.absenceNotification.sent.to.${user.email}`);
     } catch (e) {
-        console.log(e);
+        logger.error(`gmail.absenceNotification: ${e}`);
     }
 }
 
@@ -102,9 +103,9 @@ async function sendWelcomeMail(user) {
             user: user,
         });
         await gmailTransporter.sendMail(await getMail(user.email, 'Kaschuso Benachrichtigungen sind aktiviert🎉', html));
-        console.log('Welcome Mail sent');
+        logger.info(`gmail.welcomeMail.sent.to.${user.email}`);
     } catch (e) {
-        console.log(e);
+        logger.error(`gmail.welcomeMail: ${e}`);
     }
 }
 
@@ -121,9 +122,9 @@ async function sendAbsenceReminder(user, absences) {
             absences: absences
         });
         await gmailTransporter.sendMail(await getMail(user.email, 'Auf Kaschuso sind noch offene Absenzen ohne Grund eingetragen 🔔', html));
-        console.log('Absence Reminder sent');
+        logger.info(`gmail.absenceReminder.sent.to.${user.email}`);
     } catch (e) {
-        console.log(e);
+        logger.error(`gmail.absenceReminder: ${e}`);
     }
 }
 
@@ -140,8 +141,9 @@ async function sendIftttWebhookError(user) {
         });
         await gmailTransporter.sendMail(await getMail(user.email, 'IFTTT Webhook schlägt fehl❌', html));
         console.log('Ifttt error sent');
+        logger.info(`gmail.iftttWebhookError.sent.to.${user.email}`);
     } catch (e) {
-        console.log(e);
+        logger.error(`gmail.iftttWebhookError: ${e}`);
     }
 }
 
