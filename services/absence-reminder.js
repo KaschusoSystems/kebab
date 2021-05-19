@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var User = mongoose.model('User');
 var Absence = mongoose.model('Absence');
 
+const logger = require('../domain/logger');
 const webhook = require('./webhook');
 const gmail = require('./gmail');
 

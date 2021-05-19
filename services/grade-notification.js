@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var User = mongoose.model('User');
 var Subject = mongoose.model('Subject');
 
+const logger = require('../domain/logger');
 const kaschusoApi = require('./kaschuso-api');
 const webhook = require('./webhook');
 const gmail = require('./gmail');

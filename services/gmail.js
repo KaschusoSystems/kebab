@@ -140,7 +140,6 @@ async function sendIftttWebhookError(user) {
             user: user
         });
         await gmailTransporter.sendMail(await getMail(user.email, 'IFTTT Webhook schlägt fehl❌', html));
-        console.log('Ifttt error sent');
         logger.info(`gmail.iftttWebhookError.sent.to.${user.email}`);
     } catch (e) {
         logger.error(`gmail.iftttWebhookError: ${e}`);
