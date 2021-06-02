@@ -2,7 +2,7 @@
   "name": "kaschusosystems-kebab",
   "version": "1.0.0",
   "description": "Backend application for the notification service",
-  "main": "app.js",
+  "private": true,
   "scripts": {
     "start": "node ./app.js",
     "dev": "nodemon ./app.js",
@@ -21,6 +21,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "body-parser": "1.19.0",
+    "connect-history-api-fallback": "^1.6.0",
     "cors": "2.8.5",
     "dotenv": "^8.2.0",
     "errorhandler": "1.5.1",

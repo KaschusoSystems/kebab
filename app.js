@@ -9,7 +9,8 @@ const path = require('path'),
   mongoose = require('mongoose'),
   secret = require('./config').secret,
   eta = require('eta'),
-  logger = require('./domain/logger');
+  logger = require('./domain/logger')
+  history = require('connect-history-api-fallback');
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -50,6 +51,14 @@ require('./services/scheduler');
 
 app.use(require('./routes'));
 
+if (isProduction) {
+  const staticFileMiddleware = express.static(path.join(__dirname, 'public'));
+  
+  app.use(staticFileMiddleware);
+  app.use(history());
+  app.use(staticFileMiddleware);
+}
+
 /// catch 404 and forward to error handler
 app.use(function (req, res, next) {
   var err = new Error('Not Found');
@@ -87,6 +96,7 @@ app.use(function (err, req, res, next) {
     }
   });
 });
+
 
 var server = app.listen(process.env.PORT || 3000, function () {
   logger.info(`app.listening.port-${server.address().port}`);
