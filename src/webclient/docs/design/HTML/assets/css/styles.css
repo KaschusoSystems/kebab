@@ -1,0 +1,31 @@
+@media only screen and (min-width: 900px) {
+  .content {
+    margin: auto 25%;
+    min-width: 450px;
+  }
+}
+
+@media only screen and (max-width: 900px) {
+  .content {
+    margin: auto 0.5rem;
+  }
+}
+
+.loginBtn {
+  margin-top: 0.5rem;
+}
+
+.loginBtn {
+  margin-top: 1rem;
+}
+
+@media only screen and (min-width: 450px) {
+  .desktopGap {
+    margin-right: 1rem;
+  }
+}
+
+.formItem {
+  margin-bottom: 0.5rem;
+}
+

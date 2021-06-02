@@ -1,0 +1,67 @@
+[
+    {
+        "name": "bzwh",
+        "description": "Bildungszentrum\nWallierhof",
+        "url": "https://kaschuso.so.ch/bzwh"
+    },
+    {
+        "name": "ebzol",
+        "description": "Erwachsenenbildungszentrum\nOlten",
+        "url": "https://kaschuso.so.ch/ebzol"
+    },
+    {
+        "name": "ebzso",
+        "description": "Erwachsenenbildungszentrum\nSolothurn",
+        "url": "https://kaschuso.so.ch/ebzso"
+    },
+    {
+        "name": "bzgsolgb",
+        "description": "Gesundheitliche-Soziale\nBerufsfachschule Olten",
+        "url": "https://kaschuso.so.ch/bzgsolgb"
+    },
+    {
+        "name": "gibsgr",
+        "description": "Gewerblich-industrielle\nBerufsfachschule Grenchen",
+        "url": "https://kaschuso.so.ch/gibsgr"
+    },
+    {
+        "name": "gibsol",
+        "description": "Gewerblich-industrielle\nBerufsfachschule Olten",
+        "url": "https://kaschuso.so.ch/gibsol"
+    },
+    {
+        "name": "gibsso",
+        "description": "Gewerblich-industrielle\nBerufsfachschule Solothurn",
+        "url": "https://kaschuso.so.ch/gibsso"
+    },
+    {
+        "name": "bzgsolhf",
+        "description": "Höhere\nFachschule Pflege\nOlten",
+        "url": "https://kaschuso.so.ch/bzgsolhf"
+    },
+    {
+        "name": "kbsol",
+        "description": "Kaufmännische\nBerufsfachschule Olten",
+        "url": "https://kaschuso.so.ch/kbsol"
+    },
+    {
+        "name": "ksol",
+        "description": "Kantonsschule\nOlten",
+        "url": "https://kaschuso.so.ch/ksol"
+    },
+    {
+        "name": "ksso",
+        "description": "Kantonsschule\nSolothurn",
+        "url": "https://kaschuso.so.ch/ksso"
+    },
+    {
+        "name": "kbssogr",
+        "description": "Kaufmännische\nBerufsfachschule Solothurn",
+        "url": "https://kaschuso.so.ch/kbssogr"
+    },
+    {
+        "name": "zzgr",
+        "description": "ZeitZentrum\nGrenchen",
+        "url": "https://kaschuso.so.ch/zzgr"
+    }
+]

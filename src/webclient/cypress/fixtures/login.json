@@ -1,0 +1,15 @@
+{
+    "user": {
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwODcyNTQzMTQzMDdkNTA5NGM0ZmU0MSIsInVzZXJuYW1lIjoiZmxvcmluLmJhcmJpc2NoIiwibWFuZGF0b3IiOiJnaWJzc28iLCJleHAiOjE2MjY2NDAzOTEsImlhdCI6MTYyMTQ1NjM5MX0.RCyKCyEi2KIhn8iAOra_BSkw7zFQRr5u1wEDGFN0VS0",
+        "user": {
+            "username": "max.muster",
+            "mandator": "gibsso",
+            "email": "max.muster@gmail.com",
+            "kaschusoAuthenticated": true,
+            "gradeNotifications": true,
+            "absenceNotifications": true,
+            "absenceReminders": true,
+            "monthlySummary": true
+        }
+    }
+}

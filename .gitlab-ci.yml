@@ -2,15 +2,48 @@ stages:
   - test
   - docker
 
-unit_tests:
+# Set environment variables for folders in "cache" job settings for npm modules and Cypress binary
+variables:
+  npm_config_cache: "$CI_PROJECT_DIR/.npm"
+  CYPRESS_CACHE_FOLDER: "$CI_PROJECT_DIR/cache/Cypress"
+
+# Cache using branch name
+# https://gitlab.com/help/ci/caching/index.md
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - .cache/*
+    - cache/Cypress
+    - node_modules
+    - build
+
+test_backend:
   image: node:14
   stage: test
   script:
     - NODE_ENV=development
+    - cd src
     - yarn install --frozen-lockfile --check-files
     - yarn test
 
-docker_image_build_release:
+test_frontend:
+  image: cypress/browsers:node12.14.1-chrome85-ff81
+  stage: test
+  script:
+    - NODE_ENV=development
+    - cd src
+    - cd webclient
+    - yarn install --frozen-lockfile --check-files
+    - yarn serve &
+    - npx cypress run --browser chrome
+  artifacts:
+    when: always
+    paths:
+      - cypress/videos/**/*.mp4
+      - cypress/screenshots/**/*.png
+    expire_in: 1 day
+
+docker_image_build_release_backend:
   image:
     name: gcr.io/kaniko-project/executor:debug
     entrypoint: [""]

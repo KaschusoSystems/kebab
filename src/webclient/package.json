@@ -1,0 +1,38 @@
+{
+  "name": "kaschuso-notifications",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "cy:run": "cypress run"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "bootstrap": "^4.6.0",
+    "core-js": "^3.6.5",
+    "node-sass": "^6.0.0",
+    "sass-loader": "^10",
+    "vue": "^2.6.11",
+    "vue-axios": "^3.2.4",
+    "vue-loading-template": "^1.3.2",
+    "vue-router": "^3.2.0",
+    "vue-snack": "^0.1.4",
+    "vue-switches": "^2.0.1",
+    "vuex": "^3.4.0",
+    "vuex-persistedstate": "^4.0.0-beta.3"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-router": "~4.5.0",
+    "@vue/cli-plugin-vuex": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "cypress": "^7.3.0",
+    "vue-template-compiler": "^2.6.11"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
