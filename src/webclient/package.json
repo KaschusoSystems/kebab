@@ -5,6 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "cy:open": "cypress open",
     "cy:run": "cypress run"
   },
   "dependencies": {

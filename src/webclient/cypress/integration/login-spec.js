@@ -27,12 +27,18 @@ it('Login!', () => {
     .should('have.value', 'secret');
 
   cy.intercept('POST', '/api/users/login', { fixture: 'login.json' }).as('login');
-  cy.intercept('POST', '/api/user/', { fixture: 'user.json' }).as('getUser');
+  cy.intercept('GET', '/api/user/', { fixture: 'user.json' }).as('getUser');
   
   cy.contains('Login')
     .click();
   
-  cy.wait(['@login']);
+  cy.wait(['@login', '@getUser']).then(interceptions => {
+    expect(interceptions[0].request.body).to.deep.equal({
+      username: "max.muster",
+      password: "secret",
+      mandator: "gibsso",
+    });
+  });
 
   cy.get('h4').should('have.text', 'Präferenzen 🔗');
 });
