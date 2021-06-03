@@ -6,7 +6,7 @@ import AuthService from "./auth.service";
 const ApiService = {
     init(onAuthError /*function*/) {
         Vue.use(VueAxios, axios);
-        Vue.axios.defaults.baseURL = '/api/';
+        Vue.axios.defaults.baseURL = '/api';
         //if user token is invalid
         Vue.axios.interceptors.response.use(response => {
             return response;
@@ -63,30 +63,30 @@ export default ApiService;
 
 export const LoginService = {
     login(payload){
-        return ApiService.post("users/login", payload);
+        return ApiService.post("/users/login", payload);
     },
     updatePassword(payload) {
-        return ApiService.put("user/auth", payload);
+        return ApiService.put("/user/auth", payload);
     }
 };
 
 export const UserService = {
     delete(){
-        return ApiService.delete("user");
+        return ApiService.delete("/user");
     }
 };
 
 export const PreferencesService = {
     update(payload){
-        return ApiService.put("user", payload);
+        return ApiService.put("/user", payload);
     },
     fetch(payload){
-        return ApiService.get("user", payload);
+        return ApiService.get("/user", payload);
     },
 };
 
 export const MandatorListService = {
     fetch(payload){
-        return ApiService.get("mandators");
+        return ApiService.get("/mandators");
     },
 };
