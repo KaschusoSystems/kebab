@@ -43,7 +43,7 @@ test_frontend:
       - cypress/screenshots/**/*.png
     expire_in: 1 day
 
-docker_image_build_release_backend:
+docker_image_build_release:
   image:
     name: gcr.io/kaniko-project/executor:debug
     entrypoint: [""]
