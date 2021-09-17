@@ -1,5 +1,5 @@
 const fs = require('fs'),
-    path = require('path'), 
+    path = require('path'),
     eta = require('eta');
 
 beforeAll(async () => {
@@ -31,13 +31,13 @@ test('render grades', async () => {
                         average: 4.5
                     },
                     {
-                        name: 'Mein Kampf',
+                        name: 'Mein Krampf',
                         value: 3,
                         average: 4.6
                     }
                 ]
             },
-            
+
             {
                 name: 'Mathematik',
                 average: 5.5,

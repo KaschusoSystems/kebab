@@ -204,7 +204,7 @@ describe('get changed grades', () => {
                     "points": "17", // changed
                     "weighting": "1"
                 }
-            ], 
+            ],
             [
                 {
                     "date": "26.03.2021",
@@ -323,7 +323,7 @@ describe('get changed grades', () => {
                     "weighting": "1",
                     "average": "4.36"
                 }
-            ], 
+            ],
             []
         ]);
     });
@@ -358,7 +358,7 @@ describe('get changed grades', () => {
                     "weighting": "1",
                     "average": "4.36"
                 }
-            ], 
+            ],
             []
         ]);
     });
@@ -395,7 +395,7 @@ describe('get changed grades', () => {
                     "weighting": "1",
                     "average": "4.36"
                 }
-            ], 
+            ],
             []
         ]);
     });
@@ -432,7 +432,7 @@ describe('get changed grades', () => {
                     "weighting": "3",
                     "average": "4.36"
                 }
-            ], 
+            ],
             []
         ]);
     });
@@ -469,7 +469,7 @@ describe('get changed grades', () => {
                     "weighting": "1",
                     "average": "4.77"
                 }
-            ], 
+            ],
             []
         ]);
     });
@@ -913,7 +913,7 @@ describe('find by grade', () => {
         ];
         const grade = {
             "date": "08.04.2021",
-            "name": "Mein Kampf",
+            "name": "Mein Krampf",
             "value": "5.5",
             "points": "22",
             "weighting": "0.3"

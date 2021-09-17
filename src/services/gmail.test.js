@@ -32,19 +32,19 @@ test('get emoji', () => {
             ]
         }
     ])).toBe('😉'); // 4.67
-    
+
     expect(getEmoji([{ grades: [{ value: 6 }] }]))
     .toBe('😎');
-    
+
     expect(getEmoji([{ grades: [{ value: 5 }] }]))
     .toBe('😊');
-    
+
     expect(getEmoji([{ grades: [{ value: 4.3 }] }]))
     .toBe('😉');
-    
+
     expect(getEmoji([{ grades: [{ value: 3 }] }]))
     .toBe('🧐');
-    
+
     expect(getEmoji([{ grades: [{ value: 2 }] }]))
     .toBe('😳');
 
@@ -64,13 +64,13 @@ test('render grade notification html', async () => {
                     average: 4.5
                 },
                 {
-                    name: 'Mein Kampf',
+                    name: 'Mein Krampf',
                     value: 3,
                     average: 4.6
                 }
             ]
         },
-        
+
         {
             name: 'Mathematik',
             average: 5.5,
@@ -84,7 +84,7 @@ test('render grade notification html', async () => {
         }
     ];
     const emoji = getEmoji(subjects);
-    
+
     expect(await eta.renderFile('mail', {
         preheader: `Auf Kaschuso sind für ${subjects.map(x => x.name).join(', ')} neue Noten verfügbar${emoji}`,
         pages: {
@@ -101,7 +101,7 @@ test('render grade notification html', async () => {
         },
         user: {
             mandator: 'school'
-        }, 
+        },
         subjects: subjects,
         emoji: emoji
     })).toEqual(fs.readFileSync('./views/__test__/grades-mail.html', 'utf8'));
